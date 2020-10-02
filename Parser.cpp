@@ -6,12 +6,10 @@ std::vector<ParserRule*> Parser::grammarRules;
 Token* nullToken;
 TokenCheckTemplate* shiftTokenCheckTemplate = new TokenCheckTemplate("SHIFT", true, false);
 
-template<typename T>
-std::vector<T> slice(std::vector<T> const &v, int m, int n) {
-   auto first = v.begin() + m;
-   auto last = v.begin() + n;
-   std::vector<T> vector(first, last);
-   return vector;
+Token* smartLookAhead(std::list<Token*>& parseStack, Token* nextToken, std::list<Token*>::iterator i){
+    //check if it is the last element
+    if((i != parseStack.end()) && (next(i) == parseStack.end())) return nextToken;
+    else return *next(i);
 }
 
 void Parser::init(){
@@ -149,21 +147,24 @@ void Parser::init(){
     // Parser::grammarRules.push_back(rule);
 }
 
-Token* Parser::parse(std::vector<Token*> tokens){
+Token* Parser::parse(std::list<Token*> tokens){
     //clear the parse stack
-    std::vector<Token*> parseStack;
+    std::list<Token*> parseStack;
 
-    int tokenIndex = 0;
+    std::cout << "start parsing\n";
+
+    std::list<Token*>::iterator nextTokenIterator = tokens.begin();
     //while not out of bounds
     while (true){
-        std::cout << "new round\n";
-        for(int i = 0; i < parseStack.size(); i++) std::cout << parseStack.at(i)->contents << "\n";
+        // for(auto i : parseStack) std::cout << i->contents << "\n";
         //try to go through the stack and reduce
         bool hasBeenReduced = false;
 
+        //get the lookahead token
         Token* lookAheadToken;
-        if(tokenIndex < tokens.size()) {
-            lookAheadToken = tokens.at(tokenIndex);
+        //if there is a next token, add it
+        if(nextTokenIterator != tokens.end()) {
+            lookAheadToken = *nextTokenIterator;
         }else{
             lookAheadToken = nullToken;
         }
@@ -175,9 +176,9 @@ Token* Parser::parse(std::vector<Token*> tokens){
 
         //shift
         if(!hasBeenReduced){
-            if(tokenIndex < tokens.size()){
-                parseStack.push_back(tokens.at(tokenIndex));
-                tokenIndex++;
+            if(nextTokenIterator != tokens.end()){
+                parseStack.push_back(*nextTokenIterator);
+                nextTokenIterator++;
             }else if(parseStack.size() == 1){
                 break;
             }else{
@@ -186,33 +187,36 @@ Token* Parser::parse(std::vector<Token*> tokens){
         }
     }
 
-    return parseStack.at(0);
+    return *parseStack.begin();
 }
 
-bool Parser::reduce(std::vector<Token*>& parseStack, Token* nextToken){
-    std::vector<Token*> lookAheadStack = parseStack;
-
-    lookAheadStack.push_back(nextToken);
+bool Parser::reduce(std::list<Token*>& parseStack, Token* nextToken){
 
     //try all rules and find the longest one that works
     for(int grammarRuleIndex = 0; grammarRuleIndex < grammarRules.size(); grammarRuleIndex++){
         ParserRule* grammarRule = grammarRules.at(grammarRuleIndex);
 
-        for(int index = 0; index < parseStack.size(); index++){
+        //loop through the possible starting points
+        //index of the first token to check
+        int index = 0;
+        for(std::list<Token*>::iterator i = parseStack.begin(); i != parseStack.end(); i++){
             bool hasRuleWorked = true; 
 
             //if there is a lookahead, check it
             if(grammarRule->isUsingLookAhead){
                 bool hasLookAheadWorked = false;
+                //all the possible lookaheads
                 for(int lookAheadIndex = 0; lookAheadIndex < grammarRule->lookAhead->size(); lookAheadIndex++){
                     //check the one after the end
-                    Token* lookAheadToken = lookAheadStack.at(index + grammarRule->inputTokens->size());
+                    Token* lookAheadToken = smartLookAhead(parseStack, nextToken, std::next(i, grammarRule->inputTokens->size() + 1));
                     if(grammarRule->lookAhead->at(lookAheadIndex)->testToken(lookAheadToken)){
                         hasLookAheadWorked = true;
                         break;
                     }
                 }
-                if(!hasLookAheadWorked) continue;
+                if(!hasLookAheadWorked) {
+                    continue;
+                }
             }
             for(int grammarRuleTokenIndex = 0; grammarRuleTokenIndex < grammarRule->inputTokens->size(); grammarRuleTokenIndex++){
                 TokenCheckTemplate* ruleToken = grammarRule->inputTokens->at(grammarRuleTokenIndex);
@@ -223,7 +227,7 @@ bool Parser::reduce(std::vector<Token*>& parseStack, Token* nextToken){
                     break;
                 }
 
-                bool tokenTestResult = ruleToken->testToken(parseStack.at(index + grammarRuleTokenIndex));
+                bool tokenTestResult = ruleToken->testToken(*std::next(i, grammarRuleTokenIndex));
                 if(!tokenTestResult) {
                     
                     hasRuleWorked = false;
@@ -240,23 +244,27 @@ bool Parser::reduce(std::vector<Token*>& parseStack, Token* nextToken){
                     //if can be shifted, shift, or otherwise, do nothing
                     if(nextToken->type != TokenTypes::NullToken) return false;
                 }else{
-                    std::vector<Token*> newStack;
-                    newStack = slice(parseStack, 0, index);
+                    std::list<Token*>::iterator endOfDeletion = std::next(i, grammarRule->inputTokens->size());
 
-
-                    std::vector<Token*> replacedTokens = slice(parseStack, index, index + grammarRule->inputTokens->size());
+                    std::vector<Token*> replacedTokens;
+                    std::cout << "start copying tokens\n";
+                    //fill the replaced tokens
+                    for(std::list<Token*>::iterator j = i; j != endOfDeletion; j++) replacedTokens.push_back(*j);
+                    std::cout << "stop copying tokens\n";
 
                     //create a new token
                     Token* newToken = new Token(grammarRule->outputToken->contents, grammarRule->outputToken->type);
                     newToken->setChildren(replacedTokens);
 
-                    newStack.push_back(newToken);
-                    newStack.insert(newStack.end(), parseStack.begin() + index + grammarRule->inputTokens->size(), parseStack.end());
+                    //insert first to get rid of referencing problems
+                    parseStack.insert(i, newToken);
+                    parseStack.erase(i, endOfDeletion);
 
-                    parseStack = newStack;
                     return true;
                 }
             }
+
+            index++;
         }
     }
 

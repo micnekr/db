@@ -6,6 +6,8 @@
 #include "ParserRule.h"
 
 #include <iostream>
+#include <list>
+#include <vector>
 
 namespace CustomClasses{
 
@@ -13,9 +15,9 @@ namespace CustomClasses{
         public:
         static std::vector<ParserRule*> grammarRules;
         static void init();
-        static Token* parse(std::vector<Token*>m);
+        static Token* parse(std::list<Token*>m);
         private:
-        static bool reduce(std::vector<Token*>&, Token*);
+        static bool reduce(std::list<Token*>&, Token*);
     };
 }
 #endif

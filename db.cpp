@@ -1,20 +1,19 @@
 #include "CustomClasses.h"
-#include <vector>
+#include <list>
 #include <iostream>
 
 int main () {
-    // std::string languageInput = "SELECT * FROM '123 ABC'        34+32*56 /*test 'commented out*/testTable";
-    // std::string languageInput = "2.5*   4+1 * 77";
+    CustomClasses::Parser::init();
+
     std::string languageInput;
     std::getline(std::cin, languageInput);
 
-    std::vector<CustomClasses::Token*> tokens = CustomClasses::Lexer::tokenize(languageInput);
+    std::list<CustomClasses::Token*> tokens = CustomClasses::Lexer::tokenize(languageInput);
 
-    for(int i = 0; i < tokens.size(); i++){
-        std::cout << "'"<< tokens.at(i)->contents << "'" << tokens.at(i)->type << "\n";
+    for(auto const& i : tokens){
+        std::cout << "'"<< i->contents << "'" << i->type << "\n";
     }
 
-    CustomClasses::Parser::init();
     CustomClasses::Token* token = CustomClasses::Parser::parse(tokens);
 
     std::vector<CustomClasses::DataBase*>* dataBases = new std::vector<CustomClasses::DataBase*>();
@@ -22,13 +21,13 @@ int main () {
     std::cout << "new database\n";
 
 
-    CustomClasses::DataBase* settings = new CustomClasses::DataBase("testDb");
+    CustomClasses::DataBase* settingsDatabase = new CustomClasses::DataBase("testDb");
 
-    dataBases->push_back(settings);
+    dataBases->push_back(settingsDatabase);
 
     std::cout << "a new table\n";
 
-    settings->createTable("testTable");
+    settingsDatabase->createTable("testTable");
 
     std::cout << *token <<"\n";
 
@@ -40,7 +39,8 @@ int main () {
 
     connection.execute(token);
 
-    //std::cout << testDatabase.print();
+    delete token;
+    delete settingsDatabase;
 
     std::string testString;
     std::cin >> testString; 

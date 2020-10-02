@@ -7,8 +7,8 @@ char whitespaceChars [] = {' ', '\n', '\t'};
 bool safelyCheckChars(int, std::string, std::string);
 TokenTypes getTokenType(char, int, std::string);
 
-std::vector<Token*> Lexer::tokenize(std::string in){
-    std::vector<Token*> out;
+std::list<Token*> Lexer::tokenize(std::string in){
+    std::list<Token*> out;
     TokenTypes currentState = NoToken;
     std::string currentToken = "";
 

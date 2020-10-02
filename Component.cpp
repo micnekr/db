@@ -23,3 +23,8 @@ Component* Component::operator*(const Component& other){
 Component* Component::operator/(const Component& other){
     throw std::runtime_error("This operation is not supported");
 }
+
+Component::~Component(){
+    for(int i = 0; i < children.size(); i++) delete children.at(i);
+    std::cout << "destroyed a component\n";
+}

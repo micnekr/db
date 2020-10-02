@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 namespace CustomClasses{
 
@@ -32,6 +33,8 @@ namespace CustomClasses{
         void addChild(Token*);
         void setChildren(std::vector<Token*>);
         std::string print(int) const;
+
+        ~Token();
     };
 }
 

@@ -7,6 +7,7 @@ SelectFunctionComponent::SelectFunctionComponent(){
 }
 
 Component* SelectFunctionComponent::call(ArrayComponent* args){
+    std::cout << "Params for the select function:\n" << args->toString() << "\n";
     return new StringComponent("Running select");
 }
 

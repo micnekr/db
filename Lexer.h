@@ -4,14 +4,14 @@
 #include "Token.h"
 
 #include <iostream>
-#include <vector>
+#include <list>
 #include <string>
 
 namespace CustomClasses{
 
     class Lexer{
         public:
-            static std::vector<Token*> tokenize(std::string);
+            static std::list<Token*> tokenize(std::string);
             static TokenTypes lexerToTokenTypes(TokenTypes);
             static bool isWhitespaceChar(char);
             static bool isOperatorChar(char);

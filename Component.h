@@ -22,6 +22,8 @@ namespace CustomClasses{
         virtual Component* operator-(const Component&);
         virtual Component* operator*(const Component&);
         virtual Component* operator/(const Component&);
+
+        ~Component();
     };
 }
 
