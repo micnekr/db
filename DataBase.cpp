@@ -13,7 +13,7 @@ void DataBase::createTable(std::string name){
     std::cout << "add\n";
 }
 
-std::string DataBase::toString(){
+std::string DataBase::print(){
     std::string out = "";
     out += name + "\n\n";
     for(int i = 0; i < children.size(); i++){

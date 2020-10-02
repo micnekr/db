@@ -6,10 +6,10 @@ SelectFunctionComponent::SelectFunctionComponent(){
 
 }
 
-Component* SelectFunctionComponent::call(Component* args[]){
+Component* SelectFunctionComponent::call(ArrayComponent* args){
     return new StringComponent("Running select");
 }
 
 std::string SelectFunctionComponent::toString(){
-    return "Function<select>";
+    return "select";
 }

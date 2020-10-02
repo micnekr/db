@@ -6,6 +6,7 @@
 #include <vector>
 
 namespace CustomClasses{
+    class ArrayComponent;
 
     class Component{
         public:
@@ -15,7 +16,7 @@ namespace CustomClasses{
 
         std::string virtual toString() = 0;
 
-        virtual Component* call(Component* args[]);
+        virtual Component* call(ArrayComponent* args);
 
         virtual Component* operator+(const Component&);
         virtual Component* operator-(const Component&);

@@ -93,8 +93,8 @@ void Parser::init(){
     rule = new ParserRule(inputs, output);
     Parser::grammarRules.push_back(rule);
 
-    //(array)->bracket_expression
-    inputs = new std::vector<TokenCheckTemplate*>({new TokenCheckTemplate("(", false), new TokenCheckTemplate("ARRAY", true, false), new TokenCheckTemplate(")", false)});
+    //(ARRAY_PART)->bracket_expression
+    inputs = new std::vector<TokenCheckTemplate*>({new TokenCheckTemplate("(", false), new TokenCheckTemplate("ARRAY_PART", true, false), new TokenCheckTemplate(")", false)});
     output = new Token("BRACKET_EXPRESSION");
     rule = new ParserRule(inputs, output);
     Parser::grammarRules.push_back(rule);
@@ -111,15 +111,15 @@ void Parser::init(){
     rule = new ParserRule(inputs, output);
     Parser::grammarRules.push_back(rule);
 
-    //VAL, VAL->array
+    //VAL, VAL->ARRAY_PART
     inputs = new std::vector<TokenCheckTemplate*>({new TokenCheckTemplate("VAL", true, false), new TokenCheckTemplate(",", false), new TokenCheckTemplate("VAL", true, false)});
-    output = new Token("ARRAY");
+    output = new Token("ARRAY_PART");
     rule = new ParserRule(inputs, output);
     Parser::grammarRules.push_back(rule);
 
-    //array, VAL->array
-    inputs = new std::vector<TokenCheckTemplate*>({new TokenCheckTemplate("ARRAY", true, false), new TokenCheckTemplate(",", false), new TokenCheckTemplate("VAL", true, false)});
-    output = new Token("ARRAY");
+    //ARRAY_PART, VAL->ARRAY_PART
+    inputs = new std::vector<TokenCheckTemplate*>({new TokenCheckTemplate("ARRAY_PART", true, false), new TokenCheckTemplate(",", false), new TokenCheckTemplate("VAL", true, false)});
+    output = new Token("ARRAY_PART");
     rule = new ParserRule(inputs, output);
     Parser::grammarRules.push_back(rule);
 
@@ -149,19 +149,13 @@ void Parser::init(){
     // Parser::grammarRules.push_back(rule);
 }
 
-//TODO: delete;
-//TODO: read on how to detect memory leaks
-//TODO: lists instead of vectors
-//TODO: getters and setters? https://stackoverflow.com/questions/51615363/how-to-write-c-getters-and-setters
-//TODO: notify about errors
-
 Token* Parser::parse(std::vector<Token*> tokens){
     //clear the parse stack
     std::vector<Token*> parseStack;
 
     int tokenIndex = 0;
     //while not out of bounds
-    while (tokenIndex < tokens.size() || parseStack.size() != 1){
+    while (true){
         std::cout << "new round\n";
         for(int i = 0; i < parseStack.size(); i++) std::cout << parseStack.at(i)->contents << "\n";
         //try to go through the stack and reduce
@@ -184,6 +178,8 @@ Token* Parser::parse(std::vector<Token*> tokens){
             if(tokenIndex < tokens.size()){
                 parseStack.push_back(tokens.at(tokenIndex));
                 tokenIndex++;
+            }else if(parseStack.size() == 1){
+                break;
             }else{
                 throw std::runtime_error("Can not parse the expression");
             }

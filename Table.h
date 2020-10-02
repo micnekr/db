@@ -4,17 +4,16 @@
 #include "Component.h"
 #include "DataBase.h"
 #include "dataTypes/functions/tableFunctions/SelectFunctionComponent.h"
+#include "dataTypes/IdComponent.h"
 #include <string>
 
 namespace CustomClasses{
     class DataBase;
 
-    class Table : public Component{
+    class Table : public IdComponent{
         public:
-            std::string name;
             CustomClasses::DataBase* parentDatabase;
             Table(std::string, CustomClasses::DataBase*);
-            std::string toString();
     };
 }
 

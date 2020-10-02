@@ -5,6 +5,7 @@
 
 #include "Table.h"
 #include "Token.h"
+#include "dataTypes/IdComponent.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -12,14 +13,12 @@
 namespace CustomClasses{
     class Table;
 
-    class DataBase : public Component{
+    class DataBase : public IdComponent{
         public:
-        std::string name;
-
         DataBase(std::string);
 
         void createTable(std::string);
-        std::string toString();
+        std::string print();
     };
 }
 

@@ -15,8 +15,6 @@ std::string StringComponent::toString(){
     return value;
 }
 
-//TODO: return a component instead
-
 Component* StringComponent::operator+(const Component& other){
     //if not a string, throw an error
     const StringComponent* stringComponentPtr = dynamic_cast<const StringComponent*>(&other);

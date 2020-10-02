@@ -2,6 +2,7 @@
 #define FUNCTION_COMPONENT_H
 
 #include "../Component.h"
+#include "ArrayComponent.h"
 #include <iostream>
 #include <string>
 
@@ -18,7 +19,7 @@ namespace CustomClasses{
 
         virtual std::string toString() = 0;
 
-        virtual Component* call(Component* args[]) = 0;
+        virtual Component* call(ArrayComponent* args) = 0;
     };
 }
 

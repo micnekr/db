@@ -22,7 +22,7 @@ int main () {
     std::cout << "new database\n";
 
 
-    CustomClasses::DataBase* settings = new CustomClasses::DataBase("test database");
+    CustomClasses::DataBase* settings = new CustomClasses::DataBase("testDb");
 
     dataBases->push_back(settings);
 
@@ -40,10 +40,7 @@ int main () {
 
     connection.execute(token);
 
-    //std::cout << testDatabase.toString();
-
-    //TODO: don't forget to delete the tokens
-    //TODO: memory leaks
+    //std::cout << testDatabase.print();
 
     std::string testString;
     std::cin >> testString; 

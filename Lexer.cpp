@@ -7,8 +7,6 @@ char whitespaceChars [] = {' ', '\n', '\t'};
 bool safelyCheckChars(int, std::string, std::string);
 TokenTypes getTokenType(char, int, std::string);
 
-//TODO: escape characters
-//TODO: alert unescaped comments, strings
 std::vector<Token*> Lexer::tokenize(std::string in){
     std::vector<Token*> out;
     TokenTypes currentState = NoToken;
@@ -27,10 +25,6 @@ std::vector<Token*> Lexer::tokenize(std::string in){
             }
             continue;
         }
-
-        //TODO: refactor
-
-        //TODO: stop tokenes more precisely, e.g. abcd+
 
         //if the current token is ended
         if(Lexer::isWhitespaceChar(currentChar) && currentState != String && currentState != Comment){

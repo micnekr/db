@@ -3,13 +3,16 @@
 
 #include "Component.h"
 
-#include "DataBase.h"
-#include "Table.h"
 #include "dataTypes/NumberComponent.h"
 #include "dataTypes/StringComponent.h"
 #include "dataTypes/FunctionComponent.h"
+#include "dataTypes/IdComponent.h"
+#include "dataTypes/NullComponent.h"
+#include "dataTypes/ArrayComponent.h"
 #include "dataTypes/functions/tableFunctions/SelectFunctionComponent.h"
 
+#include "DataBase.h"
+#include "Table.h"
 
 #include "QueryResults.h"
 

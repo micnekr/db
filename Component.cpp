@@ -7,8 +7,8 @@ void Component::addChild(CustomClasses::Component* component){
     children.push_back(component);
 }
 
-Component* Component::call(Component* args[]){
-    throw std::runtime_error("This object can not be called");
+Component* Component::call(ArrayComponent* args){
+    throw std::runtime_error("This object can not be called, object: '" + toString() + "'");
 }
 
 Component* Component::operator+(const Component& other){

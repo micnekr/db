@@ -12,7 +12,13 @@ NumberComponent* NumberComponent::setValue(double _value){
 }
 
 std::string NumberComponent::toString(){
-    return std::to_string(value);
+    std::string out = std::to_string(value);
+
+    //loop backwards to check for trailing zeros
+    for(int i = out.length() - 1; i >= 0; i--){
+        if(out[i] != '0' && out[i] != '.') return out.substr(0, i + 1);
+    }
+    return out;
 }
 
 Component* NumberComponent::operator+(const Component& other){

@@ -3,6 +3,7 @@
 
 #include "../../FunctionComponent.h"
 #include "../../StringComponent.h"
+#include "../../ArrayComponent.h"
 #include <iostream>
 #include <string>
 
@@ -14,7 +15,7 @@ namespace CustomClasses{
 
         std::string toString();
 
-        Component* call(Component* args[]);
+        Component* call(ArrayComponent* args);
     };
 }
 
