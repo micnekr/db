@@ -2,17 +2,14 @@
 #define ARRAY_COMPONENT_H
 
 #include "../Component.h"
+#include "IdComponent.h"
 #include <iostream>
 #include <vector>
 #include <string>
 
 namespace CustomClasses{
-    class ArrayComponent: public Component{
+    class ArrayComponent: public IdComponent{
         public:
-        std::vector<Component*> value;
-
-        ArrayComponent* addValue(Component*);
-
         std::string toString();
     };
 }

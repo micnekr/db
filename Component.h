@@ -4,15 +4,27 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace CustomClasses{
+    enum ComponentTypes{
+        ctFunction,
+        ctArray,
+        ctId,
+        ctNull,
+        ctNumber,
+        ctString
+    };
+
     class ArrayComponent;
 
     class Component{
         public:
-        std::vector<CustomClasses::Component*> children;
+        std::unordered_map<std::string, CustomClasses::Component*> children;
+        int nextChildArrayIndex = 0;
 
         void addChild(CustomClasses::Component*);
+        void setChild(std::string, CustomClasses::Component*);
 
         std::string virtual toString() = 0;
 

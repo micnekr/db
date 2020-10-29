@@ -1,10 +1,9 @@
 #ifndef TABLE_H // include guard
 #define TABLE_H
 
-#include "Component.h"
+#include "dataTypes/IdComponent.h"
 #include "DataBase.h"
 #include "dataTypes/functions/tableFunctions/SelectFunctionComponent.h"
-#include "dataTypes/IdComponent.h"
 #include <string>
 
 namespace CustomClasses{
@@ -14,6 +13,7 @@ namespace CustomClasses{
         public:
             CustomClasses::DataBase* parentDatabase;
             Table(std::string, CustomClasses::DataBase*);
+            std::string name;
     };
 }
 

@@ -25,4 +25,15 @@ namespace CustomClasses{
     };
 }
 
+//add the hash functions
+namespace std{
+    template<> struct hash<CustomClasses::NumberComponent>{
+        std::size_t operator()(CustomClasses::NumberComponent const& numberComponent) const noexcept
+        {
+            std::size_t hash = std::hash<double>{}(numberComponent.value);
+            return hash; // or use boost::hash_combine
+        }
+    };
+}
+
 #endif

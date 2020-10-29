@@ -3,7 +3,21 @@
 #include <iostream>
 
 int main () {
+    //file access
+    CustomClasses::FileAccess* fileAccess = new CustomClasses::FileAccess();
+
+    fileAccess->openFileSafe("db.db", 100);
+
+    CustomClasses::StringComponent stringComponent("test string"); 
+    std::cout << std::hash<CustomClasses::StringComponent>{}(stringComponent) << "\n";
+
+    //language functionality
+
+    //parser
     CustomClasses::Parser::init();
+
+    //global IdComponent
+    CustomClasses::IdComponent* globalIdComponent = new CustomClasses::IdComponent();
 
     std::string languageInput;
     std::getline(std::cin, languageInput);
@@ -24,6 +38,7 @@ int main () {
     CustomClasses::DataBase* settingsDatabase = new CustomClasses::DataBase("testDb");
 
     dataBases->push_back(settingsDatabase);
+    globalIdComponent->setChild(settingsDatabase->name, settingsDatabase);
 
     std::cout << "a new table\n";
 
@@ -33,7 +48,7 @@ int main () {
 
     std::cout << "new connection\n";
 
-    CustomClasses::Connection connection(dataBases, 0);
+    CustomClasses::Connection connection(dataBases, settingsDatabase, fileAccess, globalIdComponent);
 
     std::cout << "executing...\n";
 

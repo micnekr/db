@@ -5,17 +5,13 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 namespace CustomClasses{
 
     class IdComponent: public Component{
         public:
-        std::string name;
-
-        IdComponent(std::string);
-        IdComponent();
-
-        IdComponent* setValue(std::string);
+        std::string className = "";
 
         std::string toString();
     };

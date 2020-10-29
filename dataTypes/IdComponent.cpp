@@ -2,19 +2,27 @@
 
 using namespace CustomClasses;
 
-IdComponent::IdComponent(std::string _name){
-    name = _name;
-}
-
-IdComponent::IdComponent(){
-    name = "";
-}
-
-IdComponent* IdComponent::setValue(std::string _name){
-    name = _name;
-    return this;
-}
-
 std::string IdComponent::toString(){
-    return name;
+    // if it is an object
+    if(children.find("__value") == children.end()){
+        std::string out = "";
+        if(className != "") out += "<" + className + "> ";
+        out += "{\n";
+        for(auto& iterator: children){
+            std::string key = iterator.first;
+            std::string value = iterator.second->toString();
+
+            //indent
+            std::string formatedValue = "";
+            for(int i = 0; i < value.size(); i++){
+                char currentChar = value[i];
+                formatedValue += currentChar;
+
+                if(currentChar == '\n') formatedValue += "\t";
+            }
+
+            out += "\t" + key + ":" + formatedValue + "\n";
+        }
+        return out += "}";
+    }else return children["__value"]->toString();
 }

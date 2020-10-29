@@ -2,16 +2,34 @@
 
 using namespace CustomClasses;
 
-ArrayComponent* ArrayComponent::addValue(Component* _value){
-    value.push_back(_value);
-    return this;
-}
-
 std::string ArrayComponent::toString(){
-    std::string out = "[";
-    for(int i = 0; i < value.size(); i++) {
-        out += value.at(i)->toString();
-        if(i != value.size() - 1) out += ", ";
-    }
-    return out + "]";
+    return IdComponent::toString();
+    // //check if it is an object with keys as ints
+    // bool allPositiveInts = true;
+    // for(auto &iterator : children){
+    //     //if not a positive integer, break
+    //     if(iterator.first.find_first_not_of( "0123456789" ) != std::string::npos){
+    //         allPositiveInts = false;
+    //         break;
+    //     }
+    // }
+
+    // //if not all are ints, return as an object
+    // if(!allPositiveInts) return IdComponent::toString();
+
+    // std::string out = "[";
+
+    // int lastInt = -1;
+    // for(auto &iterator : children) {
+    //     int key;
+    //     try{
+    //         key = std::stoi(iterator.first);
+    //         lastInt++;
+    //     }catch(const std::exception& ex) {
+    //         std::cout << "unexpected exception when converting a string to int" << "\n";
+    //         return IdComponent::toString();
+    //     }
+    //     out += iterator.second->toString();
+    // }
+    // return out + "]";
 }

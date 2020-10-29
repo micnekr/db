@@ -2,10 +2,12 @@
 
 using namespace CustomClasses;
 
-Connection::Connection(std::vector<CustomClasses::DataBase *> *_dataBases, int _selectedDataBaseIndex)
+Connection::Connection(std::vector<DataBase*> *_dataBases, DataBase* _selectedDataBase, FileAccess* _fileAccess, IdComponent* _globalIdComponent)
 {
-    selectedDataBaseIndex = _selectedDataBaseIndex;
+    selectedDataBase = _selectedDataBase;
     dataBases = _dataBases;
+    fileAccess = _fileAccess;
+    globalIdComponent = _globalIdComponent;
 }
 
 Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
@@ -66,12 +68,20 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
 
             //if a single token, make the idcomponent based on the child's name
             if(token->children.size() == 1) {
-                IdComponent* out =  new IdComponent(token->children.at(0)->contents);
+                IdComponent* out;
                 if(parent == nullptr){
-                    Component* resolved = resolveTopLevelId(out->name);
-                    if(resolved == nullptr) return new NullComponent();
-                    else return resolved;
-                }else return out;
+                    std::string key = token->children.at(0)->contents;
+                    //try to find it as a child in the global id component
+                    //if not found
+                    if(globalIdComponent->children.find(key) == globalIdComponent->children.end()) {
+                        return new NullComponent();
+                    }else{
+                        return globalIdComponent->children[key];
+                    }
+                }else {
+                    std::cout << "has a parent for some reason\n";
+                    return out;
+                }
             }
 
             //if it is id.id
@@ -81,19 +91,16 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
                 //the right ones will always be an ID containing an id name
                 Component* leftComponent = computeQuery(token->children.at(0), parent);
                 std::string rightIdName = token->children.at(2)->children.at(0)->contents;
-
-                std::cout << "finding children against " + rightIdName + "\n";
+                std::cout << "finding children called '" + rightIdName + "'\n";
                 //check if the right one is a child of the left one
-                for(int i = 0; i < leftComponent->children.size(); i++){
-                    std::cout << leftComponent->children.at(i)->toString() << "\n";
-                    if(leftComponent->children.at(i)->toString() == rightIdName){
-                        return leftComponent->children.at(i);
-                    }
+                bool hasFound = leftComponent->children.find(rightIdName) != leftComponent->children.end();
+                if(!hasFound){
+                    //not found
+                    std::cout << "not found\n";
+                    return new NullComponent();
+                }else{
+                    return leftComponent->children[rightIdName];
                 }
-
-                //not found
-                std::cout << "not found\n";
-                return new NullComponent();
             //calling functions
             }else if (token->children.at(1)->contents == "BRACKET_EXPRESSION"){
                 std::cout << "calling\n";
@@ -109,7 +116,8 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
 
                     //if it is not an array, push it into an array
                     if(castedParams == nullptr){
-                        params = (new ArrayComponent())->addValue(rawParams);
+                        params = new ArrayComponent();
+                        params->addChild(rawParams);
                     }else params = castedParams;
                 }
 
@@ -129,10 +137,10 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
             Component* leftResult = computeQuery(token->children.at(0), parentArray);
 
             //if the left result is not a part of the array, add it
-            if(dynamic_cast<ArrayComponent*>(leftResult) == nullptr) parentArray->addValue(leftResult);
+            if(dynamic_cast<ArrayComponent*>(leftResult) == nullptr) parentArray->addChild(leftResult);
 
             //then add right
-            parentArray->addValue(computeQuery(token->children.at(2), parentArray));
+            parentArray->addChild(computeQuery(token->children.at(2), parentArray));
             return parentArray;
         }else if(token->contents == "BRACKET_EXPRESSION"){
 
@@ -151,37 +159,8 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
     return 0;
 }
 
-Component* Connection::resolveTopLevelId(std::string varName){
-    std::cout << "resolving " << varName << "\n";
-    //try to recognise it
-    DataBase *currentDataBase = dataBases->at(0);
-    std::vector<CustomClasses::Component *> currentTables = currentDataBase->children;
-    //check if it is a name of a current table
-    for (int i = 0; i < currentTables.size(); i++)
-    {
-        std::cout << "table'" << currentTables.at(i)->toString() << "'\n";
-        if (currentTables.at(i)->toString() == varName)
-        {
-            std::cout << "resolved table\n";
-            return currentTables.at(i);
-        }
-    }
-
-    //check all the database names
-    for (int i = 0; i < dataBases->size(); i++)
-    {
-        std::cout << "db'" << dataBases->at(i)->toString() << "'\n";
-        if (dataBases->at(i)->name == varName)
-        {
-            std::cout << "resolved db\n";
-            return dataBases->at(i);
-        }
-    }
-    return new NullComponent();
-}
-
 void Connection::execute(Token *token)
 {
     std::string result = computeQuery(token)->toString();
-    std::cout << "result:\n" << result;
+    std::cout << "result:\n" << result << "\n";
 }

@@ -12,5 +12,5 @@ Component* SelectFunctionComponent::call(ArrayComponent* args){
 }
 
 std::string SelectFunctionComponent::toString(){
-    return "select";
+    return "built-in function(select)";
 }

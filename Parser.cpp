@@ -151,8 +151,6 @@ Token* Parser::parse(std::list<Token*> tokens){
     //clear the parse stack
     std::list<Token*> parseStack;
 
-    std::cout << "start parsing\n";
-
     std::list<Token*>::iterator nextTokenIterator = tokens.begin();
     //while not out of bounds
     while (true){
@@ -247,10 +245,8 @@ bool Parser::reduce(std::list<Token*>& parseStack, Token* nextToken){
                     std::list<Token*>::iterator endOfDeletion = std::next(i, grammarRule->inputTokens->size());
 
                     std::vector<Token*> replacedTokens;
-                    std::cout << "start copying tokens\n";
                     //fill the replaced tokens
                     for(std::list<Token*>::iterator j = i; j != endOfDeletion; j++) replacedTokens.push_back(*j);
-                    std::cout << "stop copying tokens\n";
 
                     //create a new token
                     Token* newToken = new Token(grammarRule->outputToken->contents, grammarRule->outputToken->type);

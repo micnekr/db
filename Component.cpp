@@ -3,8 +3,13 @@
 using namespace CustomClasses;
 
 void Component::addChild(CustomClasses::Component* component){
-    std::cout << "add inner\n";
-    children.push_back(component);
+    children[std::to_string(nextChildArrayIndex)] = component;
+    nextChildArrayIndex++;
+}
+
+void Component::setChild(std::string key, CustomClasses::Component* component){
+    children[key] = component;
+    nextChildArrayIndex++;
 }
 
 Component* Component::call(ArrayComponent* args){
@@ -25,6 +30,6 @@ Component* Component::operator/(const Component& other){
 }
 
 Component::~Component(){
-    for(int i = 0; i < children.size(); i++) delete children.at(i);
+    for(const auto& n : children) delete n.second;
     std::cout << "destroyed a component\n";
 }

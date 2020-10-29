@@ -3,14 +3,12 @@
 using namespace CustomClasses;
 
 Token::Token(std::string _contents, TokenTypes _type){
-    std::cout << "create token;\n";
     children = std::vector<Token*>();
     contents = _contents;
     type = _type;
 }
 
 Token::Token(std::string _contents){
-    std::cout << "create token;\n";
     children = std::vector<Token*>();
     contents = _contents;
     type = GrammarSymbol;
@@ -42,5 +40,4 @@ std::ostream& operator<<(std::ostream &strm, const CustomClasses::Token &token) 
 Token::~Token(){
     //delete children
     for(int i = 0; i < children.size(); i++) delete children.at(i);
-    std::cout << "destroyed a token\n";
 }

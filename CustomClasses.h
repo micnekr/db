@@ -3,6 +3,8 @@
 
 #include "Component.h"
 
+#include "FileAccess.h"
+
 #include "dataTypes/NumberComponent.h"
 #include "dataTypes/StringComponent.h"
 #include "dataTypes/FunctionComponent.h"

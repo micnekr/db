@@ -5,11 +5,13 @@
 #include "Token.h"
 #include "DataBase.h"
 #include "Table.h"
+#include "FileAccess.h"
 #include "dataTypes/NumberComponent.h"
 #include "dataTypes/StringComponent.h"
 #include "dataTypes/IdComponent.h"
 #include "dataTypes/NullComponent.h"
 #include "dataTypes/ArrayComponent.h"
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -19,11 +21,13 @@ namespace CustomClasses{
 
     class Connection{
         public:
-            Connection(std::vector<CustomClasses::DataBase*>*, int);
+            CustomClasses::IdComponent* globalIdComponent;
+            Connection(std::vector<CustomClasses::DataBase*>*, CustomClasses::DataBase*, CustomClasses::FileAccess*, CustomClasses::IdComponent*);
 
             std::unordered_map<std::string, Component*> connectionVars;
 
-            int selectedDataBaseIndex;
+            CustomClasses::DataBase* selectedDataBase;
+            CustomClasses::FileAccess* fileAccess;
             std::vector<CustomClasses::DataBase*>* dataBases;
             void execute(Token*);
         private:

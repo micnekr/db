@@ -22,4 +22,15 @@ namespace CustomClasses{
     };
 }
 
+//add the hash functions
+namespace std{
+    template<> struct hash<CustomClasses::StringComponent>{
+        std::size_t operator()(CustomClasses::StringComponent const& stringComponent) const noexcept
+        {
+            std::size_t hash = std::hash<std::string>{}(stringComponent.value);
+            return hash; // or use boost::hash_combine
+        }
+    };
+}
+
 #endif
