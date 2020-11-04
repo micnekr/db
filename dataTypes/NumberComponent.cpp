@@ -57,3 +57,12 @@ Component* NumberComponent::operator/(const Component& other){
 
     return out;
 }
+
+uint32_t NumberComponent::getId(){
+    uint64_t valueAsInt;
+    std::memcpy(&valueAsInt, &value, sizeof(value));
+
+    uint32_t result = ((valueAsInt << 32) ^ (valueAsInt >> 32));
+
+    return result;
+}

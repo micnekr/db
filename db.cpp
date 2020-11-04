@@ -1,8 +1,10 @@
 #include "CustomClasses.h"
 #include <list>
 #include <iostream>
+#include <cstring>
 
 int main () {
+    std::cout <<(new CustomClasses::StringComponent("hl"))->getId() << "\n";
     //file access
     CustomClasses::FileAccess* fileAccess = new CustomClasses::FileAccess();
 

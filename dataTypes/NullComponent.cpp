@@ -9,3 +9,7 @@ NullComponent::NullComponent(){}
 std::string NullComponent::toString(){
     return "Null";
 }
+
+uint32_t NullComponent::getId(){
+    return 0;
+}

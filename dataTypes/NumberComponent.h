@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stdint.h>
+#include <cstring>
 
 namespace CustomClasses{
 
@@ -22,6 +24,7 @@ namespace CustomClasses{
         Component* operator/(const Component&);
 
         std::string toString();
+        uint32_t getId();
     };
 }
 

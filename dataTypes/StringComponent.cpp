@@ -24,3 +24,13 @@ Component* StringComponent::operator+(const Component& other){
 
     return out;
 }
+
+uint32_t StringComponent::getId(){
+    if(value.size() == 0) return 0;
+    int hash = 0;
+    for(int i = 0; i < value.size(); i++){
+        hash = hash * 31 + value.at(i);
+    }
+    return hash;
+    // return "";
+}

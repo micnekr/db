@@ -2,13 +2,14 @@
 #define FUNCTION_COMPONENT_H
 
 #include "../Component.h"
+#include "IdComponent.h"
 #include "ArrayComponent.h"
 #include <iostream>
 #include <string>
 
 namespace CustomClasses{
 
-    class FunctionComponent: public Component{
+    class FunctionComponent: public IdComponent{
         public:
         FunctionComponent* setValue();
 

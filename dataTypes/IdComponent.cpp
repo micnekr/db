@@ -26,3 +26,10 @@ std::string IdComponent::toString(){
         return out += "}";
     }else return children["__value"]->toString();
 }
+
+uint32_t IdComponent::getId(){
+    IdComponent* ptr = this;
+    uint32_t value = (uint32_t) ptr;
+    std::cout << value << "\n";
+    return value;
+}

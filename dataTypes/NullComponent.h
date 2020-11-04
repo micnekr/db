@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stdint.h>
 
 namespace CustomClasses{
 
@@ -14,6 +15,7 @@ namespace CustomClasses{
         NullComponent();
 
         std::string toString();
+        uint32_t getId();
 
         const static std::size_t hashValue;
     };
