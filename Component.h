@@ -36,9 +36,14 @@ namespace CustomClasses{
         virtual Component* operator*(const Component&);
         virtual Component* operator/(const Component&);
 
-        uint32_t id = 0;
+        // virtual std::vector<char> serialise();
+        // virtual Component* deserialise(std::vector<char>);
 
-        virtual uint32_t getId() = 0;
+        uint32_t id = 0;
+        bool hasIdExpired = true;
+
+        virtual uint32_t generateId() = 0;
+        uint32_t getId();
 
         ~Component();
     };

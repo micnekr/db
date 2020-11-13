@@ -21,18 +21,7 @@ namespace CustomClasses{
 
         std::string toString();
 
-        uint32_t getId();
-    };
-}
-
-//add the hash functions
-namespace std{
-    template<> struct hash<CustomClasses::StringComponent>{
-        std::size_t operator()(CustomClasses::StringComponent const& stringComponent) const noexcept
-        {
-            std::size_t hash = std::hash<std::string>{}(stringComponent.value);
-            return hash; // or use boost::hash_combine
-        }
+        uint32_t generateId();
     };
 }
 

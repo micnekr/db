@@ -58,7 +58,7 @@ Component* NumberComponent::operator/(const Component& other){
     return out;
 }
 
-uint32_t NumberComponent::getId(){
+uint32_t NumberComponent::generateId(){
     uint64_t valueAsInt;
     std::memcpy(&valueAsInt, &value, sizeof(value));
 

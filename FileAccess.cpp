@@ -2,22 +2,19 @@
 
 using namespace CustomClasses;
 
-void FileAccess::openFileSafe(std::string path, int allocatedSpace){
-    //init a file
-    bool fileExists = std::ifstream(path).is_open();
+MapFile* FileAccess::openFileSafe(std::string path, int allocatedSpace){
+    //check if the file has already been opened
 
-    //if file doesn't exist, fill it with default size
-    if(!fileExists){
-        // //create new
-        std::ofstream file;
-        file.open(path);
-        //size
-        std::string s(allocatedSpace, 0x00);
-        file << s;
+    try {
+        MapFile* mapFile = new MapFile(path, allocatedSpace);
+
+        // create a new MapFile
+        openedFiles.push_back(mapFile);
+        openedFilesNames.push_back(path);
+
+        return mapFile;
+    }catch(const std::system_error& e){
+        std::cout << "error opening a file '" << path << "'\n";
+        return nullptr;
     }
-
-    mio::mmap_sink* rw_mmap = new mio::mmap_sink(path);
-
-    openedFiles.push_back(rw_mmap);
-    openedFilesNames.push_back(path);
 }

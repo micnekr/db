@@ -10,6 +10,6 @@ std::string NullComponent::toString(){
     return "Null";
 }
 
-uint32_t NullComponent::getId(){
+uint32_t NullComponent::generateId(){
     return 0;
 }

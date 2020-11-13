@@ -15,19 +15,9 @@ namespace CustomClasses{
         NullComponent();
 
         std::string toString();
-        uint32_t getId();
+        uint32_t generateId();
 
         const static std::size_t hashValue;
-    };
-}
-
-//add the hash functions
-namespace std{
-    template<> struct hash<CustomClasses::NullComponent>{
-        std::size_t operator()(CustomClasses::NullComponent const& nullComponent) const noexcept
-        {
-            return CustomClasses::NullComponent::hashValue;
-        }
     };
 }
 

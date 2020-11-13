@@ -33,3 +33,9 @@ Component::~Component(){
     for(const auto& n : children) delete n.second;
     std::cout << "destroyed a component\n";
 }
+
+uint32_t Component::getId(){
+    if(hasIdExpired) id = generateId();
+    hasIdExpired = false;
+    return id;
+}

@@ -1,9 +1,12 @@
 #ifndef CUSTOM_CLASSES_H // include guard
 #define CUSTOM_CLASSES_H
 
+#include "Config.h"
+
 #include "Component.h"
 
 #include "FileAccess.h"
+#include "MapFile.h"
 
 #include "dataTypes/NumberComponent.h"
 #include "dataTypes/StringComponent.h"
@@ -12,7 +15,6 @@
 #include "dataTypes/NullComponent.h"
 #include "dataTypes/ArrayComponent.h"
 #include "dataTypes/functions/tableFunctions/SelectFunctionComponent.h"
-
 #include "DataBase.h"
 #include "Table.h"
 
