@@ -46,9 +46,9 @@ bool TokenCheckTemplate::testToken(Token* token){
             if(!isUserDefined && token->type != GrammarSymbol) return false;
             if(isCaseSensitive) return token->contents == tokenValue;
             else return toLowerCase(token->contents) == tokenValue;
-            break;
         case TokenCheckTemplateTypes::TokenType:
             return tokenType == token->type;
-            break;
+        default:
+            return false;
     }
 }

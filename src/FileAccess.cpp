@@ -2,7 +2,7 @@
 
 using namespace CustomClasses;
 
-MapFile* FileAccess::openFileSafe(std::string path, int allocatedSpace){
+MapFile* FileAccess::openFileSafe(std::string path, int allocatedSpace, bool needsTombstoneUpdate){
     //check if the file has already been opened
 
     try {

@@ -10,6 +10,7 @@
 #include <vector>
 #include <system_error>
 #include <stdint.h>
+#include <bitset>
 
 namespace CustomClasses{
     class Table;
@@ -23,7 +24,11 @@ namespace CustomClasses{
         MapFile* primaryMap;
         MapFile* secondaryMap;
 
+        std::list<TombIndex*> tombstones;
+
         void createTable(std::string);
+
+        void updateTombstones();
 
         void store(uint32_t, Component*);
     };

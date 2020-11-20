@@ -14,7 +14,7 @@ namespace CustomClasses{
             std::vector<MapFile*> openedFiles;
             std::vector<std::string> openedFilesNames;
 
-            MapFile* openFileSafe(std::string, int);
+            MapFile* openFileSafe(std::string, int, bool);
     };
 }
 

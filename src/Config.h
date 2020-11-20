@@ -28,6 +28,8 @@ namespace CustomClasses
         const int randomBytesInObjectId = 1;
         const int timeBytesInObjectId = 1;
         const int counterBytesInObjectId = 1;
+
+        const int lengthBytesInDataRepresentation = 3;
     };
 } // namespace CustomClasses
 
