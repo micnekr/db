@@ -5,9 +5,6 @@
 int main()
 {
     try {
-        //file access
-        CustomClasses::FileAccess *fileAccess = new CustomClasses::FileAccess();
-
         //global IdComponent
         CustomClasses::IdComponent *globalIdComponent = new CustomClasses::IdComponent();
 
@@ -46,7 +43,7 @@ int main()
 
         std::cout << "new connection\n";
 
-        CustomClasses::Connection connection(dataBases, settingsDatabase, fileAccess, globalIdComponent);
+        CustomClasses::Connection connection(dataBases, settingsDatabase, globalIdComponent);
 
         std::cout << "executing...\n";
 

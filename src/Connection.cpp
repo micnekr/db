@@ -2,11 +2,10 @@
 
 using namespace CustomClasses;
 
-Connection::Connection(std::vector<DataBase*> *_dataBases, DataBase* _selectedDataBase, FileAccess* _fileAccess, IdComponent* _globalIdComponent)
+Connection::Connection(std::vector<DataBase*> *_dataBases, DataBase* _selectedDataBase, IdComponent* _globalIdComponent)
 {
     selectedDataBase = _selectedDataBase;
     dataBases = _dataBases;
-    fileAccess = _fileAccess;
     globalIdComponent = _globalIdComponent;
 }
 

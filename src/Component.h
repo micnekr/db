@@ -8,14 +8,6 @@
 #include <stdint.h>
 
 namespace CustomClasses{
-    enum ComponentTypes{
-        ctFunction,
-        ctArray,
-        ctId,
-        ctNull,
-        ctNumber,
-        ctString
-    };
 
     class ArrayComponent;
 

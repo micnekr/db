@@ -5,7 +5,6 @@
 
 #include "Component.h"
 
-#include "FileAccess.h"
 #include "MapFile.h"
 
 #include "dataTypes/NumberComponent.h"

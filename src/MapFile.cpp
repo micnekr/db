@@ -27,7 +27,7 @@ MapFile::MapFile(std::string _path, int allocatedSpace){
 void MapFile::set(uint32_t index, uint64_t value){
     int pointerSize = Config::getInstance().mapFilePointerSize;
     uint64_t charStartIndex = index * pointerSize;
-    if(charStartIndex >= fileSize || charStartIndex < 0) throw ("Map file out of range, index " + std::to_string(index));
+    if(charStartIndex >= fileSize || charStartIndex < 0) throw std::runtime_error("Map file out of range, index " + std::to_string(index));
 
     //loop through the values, most significant bits first
     for(int i = pointerSize - 1; i >= 0; i--){
