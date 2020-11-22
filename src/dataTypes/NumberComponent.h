@@ -18,13 +18,16 @@ namespace CustomClasses{
 
         NumberComponent* setValue(double);
 
-        Component* operator+(const Component&);
-        Component* operator-(const Component&);
-        Component* operator*(const Component&);
-        Component* operator/(const Component&);
+        Component* operator+(const Component&) override;
+        Component* operator-(const Component&) override;
+        Component* operator*(const Component&) override;
+        Component* operator/(const Component&) override;
 
-        std::string toString();
-        uint32_t generateId();
+        std::string toString() override;
+        uint32_t generateId() override;
+
+        std::vector<unsigned char>* serialise() override;
+        Component* deserealise(std::vector<unsigned char>*) override;
     };
 }
 

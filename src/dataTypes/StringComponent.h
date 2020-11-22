@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 
 namespace CustomClasses{
 
@@ -17,11 +17,14 @@ namespace CustomClasses{
 
         StringComponent* setValue(std::string);
 
-        Component* operator+(const Component&);
+        Component* operator+(const Component&) override;
 
-        std::string toString();
+        std::string toString() override;
 
-        uint32_t generateId();
+        uint32_t generateId() override;
+
+        std::vector<unsigned char>* serialise() override;
+        Component* deserealise(std::vector<unsigned char>*) override;
     };
 }
 

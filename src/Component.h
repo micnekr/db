@@ -19,7 +19,7 @@ namespace CustomClasses{
         void addChild(CustomClasses::Component*);
         void setChild(std::string, CustomClasses::Component*);
 
-        std::string virtual toString() = 0;
+        virtual std::string toString() = 0;
 
         virtual Component* call(ArrayComponent* args);
 
@@ -28,14 +28,14 @@ namespace CustomClasses{
         virtual Component* operator*(const Component&);
         virtual Component* operator/(const Component&);
 
-        // virtual std::vector<char> serialise();
-        // virtual Component* deserialise(std::vector<char>);
-
         uint32_t id = 0;
         bool hasIdExpired = true;
 
         virtual uint32_t generateId() = 0;
         uint32_t getId();
+
+        virtual std::vector<unsigned char>* serialise();
+        virtual Component* deserealise(std::vector<unsigned char>*);
 
         ~Component();
     };

@@ -1,7 +1,6 @@
 #include "CustomClasses.h"
 #include <list>
 #include <iostream>
-
 int main()
 {
     try {
@@ -52,8 +51,8 @@ int main()
         delete token;
         delete settingsDatabase;
 
-        std::string testString;
-        std::cin >> testString;
+        std::string waitString;
+        std::cin >> waitString;
         return 0;
     }catch(std::string ex){
         std::cerr << "\n\n" << ex << "\n";

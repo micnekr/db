@@ -21,8 +21,8 @@ namespace CustomClasses{
 
         std::string className = "";
 
-        std::string toString();
-        uint32_t generateId();
+        std::string toString() override;
+        uint32_t generateId() override;
     };
 }
 

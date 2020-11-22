@@ -18,9 +18,9 @@ namespace CustomClasses{
         void operator*(const FunctionComponent&);
         void operator/(const FunctionComponent&);
 
-        virtual std::string toString() = 0;
+        std::string toString() override = 0;
 
-        virtual Component* call(ArrayComponent* args) = 0;
+        Component* call(ArrayComponent* args) override = 0;
     };
 }
 

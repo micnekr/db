@@ -13,9 +13,9 @@ namespace CustomClasses{
         public:
         SelectFunctionComponent();
 
-        std::string toString();
+        std::string toString() override;
 
-        Component* call(ArrayComponent* args);
+        Component* call(ArrayComponent* args) override;
     };
 }
 

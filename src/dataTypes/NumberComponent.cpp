@@ -66,3 +66,38 @@ uint32_t NumberComponent::generateId(){
 
     return result;
 }
+
+std::vector<unsigned char>* NumberComponent::serialise() {
+    uint64_t uintRepresentation;
+    memcpy(&uintRepresentation, &value, sizeof(value));
+
+    std::cout << std::hex << uintRepresentation << "\n";
+
+    std::vector<unsigned char>* bytes = new std::vector<unsigned char>();
+
+
+    for(int i = 0; i < 8; i++){
+        bytes->push_back(uintRepresentation & 0xFF);
+        uintRepresentation >>= 8;
+    }
+
+    return bytes;
+}
+
+Component *NumberComponent::deserealise(std::vector<unsigned char> * bytes) {
+    uint64_t uintRepresentation = 0;
+
+    std::cout << bytes->size() << "\n";
+
+    for(int i = 7; i >= 0; i--){
+        uintRepresentation <<= 8;
+        std::cout << i << " " << int(bytes->at(i)) << "\n";
+        uintRepresentation += bytes->at(i);
+    }
+
+    std::cout << std::hex << uintRepresentation << " deserialise num" << "\n";
+
+    memcpy(&value, &uintRepresentation, sizeof(value));
+
+    return this;
+}

@@ -39,3 +39,11 @@ uint32_t Component::getId(){
     hasIdExpired = false;
     return id;
 }
+
+std::vector<unsigned char>* Component::serialise() {
+    throw std::runtime_error("A value of this type can not be serialised");
+}
+
+Component *Component::deserealise(std::vector<unsigned char>*) {
+    throw std::runtime_error("A value of this type can not be deserialised");
+}
