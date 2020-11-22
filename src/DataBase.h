@@ -5,26 +5,26 @@
 #include "Table.h"
 #include "Token.h"
 #include "MapFile.h"
+#include "CharStreamDecoder.h"
 #include <iostream>
 #include <string>
 #include <vector>
 #include <system_error>
 #include <stdint.h>
-#include <bitset>
 
 namespace CustomClasses{
     class Table;
 
     class DataBase : public IdComponent{
         public:
-        DataBase(std::string, MapFile*, MapFile*);
         DataBase(std::string, std::string, std::string, int, int);
         DataBase() = delete;
         std::string name;
         MapFile* primaryMap;
         MapFile* secondaryMap;
+        CharStreamDecoder* charStreamDecoder;
 
-        std::list<TombIndex*> tombstones;
+        std::list<TombIndex*>* tombstones;
 
         void createTable(std::string);
 
