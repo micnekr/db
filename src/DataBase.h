@@ -15,33 +15,40 @@
 #include <stdint.h>
 #include <typeindex>
 
-namespace CustomClasses{
+namespace CustomClasses {
     class Table;
 
-    class DataBase : public IdComponent{
-        public:
+    class DataBase : public IdComponent {
+    public:
         DataBase(std::string, std::string, std::string, int, int);
-        DataBase() = delete;
-        std::string name;
-        MapFile* primaryMap;
-        MapFile* secondaryMap;
-        CharStreamDecoder* charStreamDecoder;
 
-        std::list<TombIndex*>* tombstones;
+        DataBase() = delete;
+
+        std::string name;
+        MapFile *primaryMap;
+        MapFile *secondaryMap;
+        CharStreamDecoder *charStreamDecoder;
+
+        std::list<TombIndex *> *tombstones;
 
         void createTable(std::string);
 
         void updateTombstones();
-        std::list<TombIndex*>::iterator findSuitableTombIndexIterator(uint64_t, TombIndexSearchTypes) const;
 
-        void storePrimaryAndSecondaryMap(std::vector<unsigned char>*, Component*);
-        Component* searchPrimaryAndSecondaryMap(std::vector<unsigned char>*);
+        std::list<TombIndex *>::iterator findSuitableTombIndexIterator(uint64_t, TombIndexSearchTypes) const;
 
-        static std::vector<unsigned char>* serialiseSecondaryMapEntry(Component *value);
+        void storePrimaryAndSecondaryMap(std::vector<unsigned char> *, Component *, Component *);
+
+        Component *searchPrimaryAndSecondaryMap(std::vector<unsigned char> *, Component*);
+
+        static std::vector<unsigned char> *serialiseSecondaryMapEntry(Component *, Component *);
 
         static std::unordered_map<unsigned char, std::type_index> binToTypeRepresentations;
         static std::unordered_map<std::type_index, unsigned char> typeToBinRepresentations;
         static bool haveTypeBinaryRepresentationsBeenSet;
+
+    private:
+        static void serialiseComponent(std::vector<unsigned char>*, Component * component);
     };
 }
 

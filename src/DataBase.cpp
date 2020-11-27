@@ -135,9 +135,12 @@ std::vector<unsigned char> *uint64_tToCharVector(uint64_t value, int length) {
     return returnValue;
 }
 
-void DataBase::storePrimaryAndSecondaryMap(std::vector<unsigned char> *pmIndexPointerCharVector, Component *value) {
+
+void DataBase::storePrimaryAndSecondaryMap(std::vector<unsigned char> *pmIndexPointerCharVector, Component *key,
+                                           Component *value) {
+    std::cout << "store" << "\n";
     //first, serialise the data to store
-    std::vector<unsigned char> *serialisedValue = DataBase::serialiseSecondaryMapEntry(value);
+    std::vector<unsigned char> *serialisedValue = DataBase::serialiseSecondaryMapEntry(key, value);
 
     uint64_t dataLength = serialisedValue->size();
     //find a suitable location among the tombstones
@@ -174,9 +177,9 @@ void DataBase::storePrimaryAndSecondaryMap(std::vector<unsigned char> *pmIndexPo
 
     //if empty, then record the place
     // else, find the next place and change the address bytes
-    if (isEmpty){
+    if (isEmpty) {
         primaryMap->set(pmBytePointerUInt, smPointerCharVector);
-    } else{
+    } else {
         //re-assign to avoid confusion
         std::vector<unsigned char> *lastPointerCharVector = pmData;
         const int lengthBytesInDataRepresentation = Config::getInstance().lengthBytesInDataRepresentation;
@@ -192,7 +195,7 @@ void DataBase::storePrimaryAndSecondaryMap(std::vector<unsigned char> *pmIndexPo
             uint64_t nextPointerUInt =
                     charVectorTouint64_t(lastPointerCharVector) + lengthBytesInDataRepresentation;
             //get the new last pointer
-            std::vector<unsigned char>* newPointerCharVector = secondaryMap->get(nextPointerUInt, pointerSize);
+            std::vector<unsigned char> *newPointerCharVector = secondaryMap->get(nextPointerUInt, pointerSize);
             //check if it is all 0s
             bool isNewPositionEmpty = true;
             for (unsigned char i : *newPointerCharVector) {
@@ -203,7 +206,7 @@ void DataBase::storePrimaryAndSecondaryMap(std::vector<unsigned char> *pmIndexPo
             }
 
             //if it is, break
-            if(isNewPositionEmpty) break;
+            if (isNewPositionEmpty) break;
 
             //else, update
             lastPointerCharVector = newPointerCharVector;
@@ -216,7 +219,8 @@ void DataBase::storePrimaryAndSecondaryMap(std::vector<unsigned char> *pmIndexPo
         std::cout << "End print" << "\n";
 
         //set the new bytes
-        uint64_t smEntryNextFieldPointerUInt = charVectorTouint64_t(lastPointerCharVector) + lengthBytesInDataRepresentation;
+        uint64_t smEntryNextFieldPointerUInt =
+                charVectorTouint64_t(lastPointerCharVector) + lengthBytesInDataRepresentation;
         secondaryMap->set(smEntryNextFieldPointerUInt, smPointerCharVector);
     }
     //set the values
@@ -267,39 +271,41 @@ DataBase::findSuitableTombIndexIterator(uint64_t minLength, TombIndexSearchTypes
     return bestIterator;
 }
 
-std::vector<unsigned char> *DataBase::serialiseSecondaryMapEntry(Component *value) {
-    auto componentTypeIndex = std::type_index(typeid(*value));
+std::vector<unsigned char> *DataBase::serialiseSecondaryMapEntry(Component *key, Component *value) {
+    auto dataToStore = new std::vector<unsigned char>;
 
-    std::vector<unsigned char> dataToStore;
-
-    unsigned char representation;
+    const int mapFilePointerSize = Config::getInstance().mapFilePointerSize;
+    const int lengthBytesInDataRepresentation = Config::getInstance().lengthBytesInDataRepresentation;
 
     //length|nextObject|KeyLength|Key|Value
 
+    //length will be at the end
+
     //nextObject
-    for (int i = 0; i < Config::getInstance().mapFilePointerSize; i++) dataToStore.push_back(0x00u);
+    for (int i = 0; i < mapFilePointerSize; i++) dataToStore->push_back(0x00u);
+
+    //Key:
+    //type specifier
+    auto keyBytes = new std::vector<unsigned char>;
+
+    //add the actual serialised value
+    serialiseComponent(keyBytes, key);
+
+    //add the length to the data representation
+    std::vector<unsigned char> *keyBytesLengthCharVector = uint64_tToCharVector(keyBytes->size(),
+                                                                                lengthBytesInDataRepresentation);
+    for (const auto &keyByteLength : *keyBytesLengthCharVector) dataToStore->push_back(keyByteLength);
+
+    //store the overall value
+    for (const auto &keyByte : *keyBytes) dataToStore->push_back(keyByte);
 
     //Value:
-    //type specifier
-    try {
-        representation = DataBase::typeToBinRepresentations.at(componentTypeIndex);
-    } catch (std::out_of_range) {
-        std::string errorString = "Can not find a type byte for the given type, type ";
-        errorString += componentTypeIndex.name();
-        throw std::runtime_error(errorString);
-    }
-
-    dataToStore.push_back(representation);
-
-    //serialised data
-    std::vector<unsigned char> *serialised = value->serialise();
-    for (unsigned char &i : *serialised) dataToStore.push_back(i);
+    serialiseComponent(dataToStore, value);
 
     //length
 
     // make sure that it is not longer than it should be
-    const int lengthBytesInDataRepresentation = Config::getInstance().lengthBytesInDataRepresentation;
-    uint64_t length = dataToStore.size();
+    uint64_t length = dataToStore->size();
 
     int64_t mask = uint64_t(1) << (lengthBytesInDataRepresentation * 8u - 1u);//get the largest bit possible
 
@@ -310,6 +316,7 @@ std::vector<unsigned char> *DataBase::serialiseSecondaryMapEntry(Component *valu
     length |= mask;
 
     //calculate the length chars
+    //TODO: replace with the function
     std::vector<unsigned char> lengthBytes;
 
     for (int i = 0; i < lengthBytesInDataRepresentation; i++) {
@@ -322,7 +329,7 @@ std::vector<unsigned char> *DataBase::serialiseSecondaryMapEntry(Component *valu
     //add reversed length bytes
     for (int i = lengthBytes.size() - 1; i >= 0; i--) bytes->push_back(lengthBytes.at(i));
     //add data bytes
-    for (int i = 0; i < dataToStore.size(); i++) bytes->push_back(dataToStore.at(i));
+    for (int i = 0; i < dataToStore->size(); i++) bytes->push_back(dataToStore->at(i));
 
     std::cout << "start write" << "\n";
     for (const auto &item : *bytes) {
@@ -332,22 +339,86 @@ std::vector<unsigned char> *DataBase::serialiseSecondaryMapEntry(Component *valu
     return bytes;
 }
 
-Component *DataBase::searchPrimaryAndSecondaryMap(std::vector<unsigned char>* pmPointerCharVector) {
+Component *DataBase::searchPrimaryAndSecondaryMap(std::vector<unsigned char> *pmPointerCharVector, Component *key) {
+    std::cout << "search" << "\n";
+    auto serialisedKey = new std::vector<unsigned char>;
+    serialiseComponent(serialisedKey, key);
+
+    // calculate its size
+    uint64_t keySize = serialisedKey->size();
     uint64_t pmPointerUInt = charVectorTouint64_t(pmPointerCharVector);
     std::cout << "Start search at index " << pmPointerUInt << "\n";
 
     const int mapFilePointerSize = Config::getInstance().mapFilePointerSize;
+    const int lengthBytesInDataRepresentation = Config::getInstance().lengthBytesInDataRepresentation;
 
-    uint64_t smPointerUInt = charVectorTouint64_t(primaryMap->get(pmPointerUInt * mapFilePointerSize, mapFilePointerSize));
+    uint64_t smPointerUInt = charVectorTouint64_t(
+            primaryMap->get(pmPointerUInt * mapFilePointerSize, mapFilePointerSize));
 
-    std::cout << "sm pointer " << smPointerUInt << "\n";
     //TODO: check if it is null, then return nullptr
 
     // assume it is the first one
     //TODO: change it
 
+    //find the correct entry
+
+    uint64_t storedKeySize;
+
+    while (true) {
+        std::cout << "Start print" << "\n";
+        std::cout << smPointerUInt << "\n";
+        std::cout << "End print" << "\n";
+
+        //move forward by the number of length bytes
+        uint64_t nextPointerPointerUInt =
+                smPointerUInt + lengthBytesInDataRepresentation;
+        //get the new last pointer
+        std::vector<unsigned char> *newPointerCharVector = secondaryMap->get(nextPointerPointerUInt,
+                                                                             mapFilePointerSize);
+
+        //read the key length bits
+        //length of the key = lengthBytesInDataRepresentation
+        //skip the next address
+        std::vector<unsigned char> *keyLengthVector = secondaryMap->get(nextPointerPointerUInt + mapFilePointerSize,
+                                                                        lengthBytesInDataRepresentation);
+        storedKeySize = charVectorTouint64_t(keyLengthVector);
+        std::cout << "size of the key " << keySize << "\n";
+
+        //check the key lengths and then the contents
+        if (keySize == storedKeySize) {
+            //skip to the beginning of the key
+            auto storedKey = secondaryMap->get(
+                    nextPointerPointerUInt + mapFilePointerSize + lengthBytesInDataRepresentation, keySize);
+            //check byte by byte
+            bool areKeysEqual = true;
+            for (int i = 0; i < storedKeySize; ++i) {
+                if (storedKey->at(i) != serialisedKey->at(i)) {
+                    std::cout << "Key is wrong" << "\n";
+                    areKeysEqual = false;
+                    break;
+                }
+            }
+            if (areKeysEqual) break;
+        }
+
+        //if not found, return nullptr
+        bool isNewPositionEmpty = true;
+        for (unsigned char i : *newPointerCharVector) {
+            if (i != 0x00) {
+                isNewPositionEmpty = false;
+                break;
+            }
+        }
+        if (isNewPositionEmpty) return nullptr;
+
+        //else, update
+        smPointerUInt = charVectorTouint64_t(newPointerCharVector);
+    }
+
+    // finalise the index
+    std::cout << "sm pointer " << smPointerUInt << "\n";
+
     //go over the file and read the length bits
-    const int lengthBytesInDataRepresentation = Config::getInstance().lengthBytesInDataRepresentation;
     uint64_t tokenLengthUInt = charVectorTouint64_t(secondaryMap->get(smPointerUInt, lengthBytesInDataRepresentation));
 
     //remove the largest bit
@@ -363,7 +434,11 @@ Component *DataBase::searchPrimaryAndSecondaryMap(std::vector<unsigned char>* pm
 
     //read the rest
     //do not read the address bits or length bits
-    std::vector<unsigned char>* storedToken = secondaryMap->get(smPointerUInt + lengthBytesInDataRepresentation + mapFilePointerSize, tokenLengthUInt - mapFilePointerSize);
+    //skip the overall length, nextObject pointer, key length bytes and the key length
+    uint64_t numberOfBytesBeforeValue =
+            mapFilePointerSize + lengthBytesInDataRepresentation + storedKeySize;
+    std::vector<unsigned char> *storedToken = secondaryMap->get(
+            smPointerUInt + numberOfBytesBeforeValue + lengthBytesInDataRepresentation, tokenLengthUInt - numberOfBytesBeforeValue); // + lengthBytes because they are exlcuded in the length
 
     std::cout << "start search print" << "\n";
     for (const auto &byte : *storedToken) {
@@ -375,17 +450,17 @@ Component *DataBase::searchPrimaryAndSecondaryMap(std::vector<unsigned char>* pm
     auto componentTypeIndex = DataBase::binToTypeRepresentations.at(componentTypeChar);
     auto encodedToken = new std::vector<unsigned char>();
     std::cout << componentTypeIndex.name() << "\n";
-    for(int i = 1; i < storedToken->size(); i++) encodedToken->push_back(storedToken->at(i));
+    for (int i = 1; i < storedToken->size(); i++) encodedToken->push_back(storedToken->at(i));
 
-    Component* retrievedComponent;
+    Component *retrievedComponent;
 
     if (componentTypeIndex == typeid(StringComponent)) {
         retrievedComponent = new StringComponent("");
         retrievedComponent->deserealise(encodedToken);
-    }else if(componentTypeIndex == typeid(NumberComponent)){
+    } else if (componentTypeIndex == typeid(NumberComponent)) {
         retrievedComponent = new NumberComponent(0);
         retrievedComponent->deserealise(encodedToken);
-    }else if(componentTypeIndex == typeid(NullComponent)){
+    } else if (componentTypeIndex == typeid(NullComponent)) {
         retrievedComponent = new NullComponent();
         retrievedComponent->deserealise(encodedToken);
     }
@@ -393,4 +468,22 @@ Component *DataBase::searchPrimaryAndSecondaryMap(std::vector<unsigned char>* pm
     std::cout << "Pointer: " << int(retrievedComponent) << "\n";
 
     return retrievedComponent;
+}
+
+void DataBase::serialiseComponent(std::vector<unsigned char> *toAddTo, Component *component) {
+    std::cout << "Serialising" << "\n";
+    unsigned char typeRepresentation;
+    auto componentTypeIndex = std::type_index(typeid(*component));
+    try {
+        typeRepresentation = DataBase::typeToBinRepresentations.at(componentTypeIndex);
+    } catch (std::out_of_range) {
+        std::string errorString = "Can not find a type byte for the given type, type ";
+        errorString += componentTypeIndex.name();
+        throw std::runtime_error(errorString);
+    }
+
+    toAddTo->push_back(typeRepresentation);
+
+    std::vector<unsigned char> *serialisedValue = component->serialise();
+    for (unsigned char &i : *serialisedValue) toAddTo->push_back(i);
 }

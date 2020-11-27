@@ -21,16 +21,15 @@ int main()
 
         settingsDatabase->createTable("testTable");
         auto* testIndex = new std::vector<unsigned char>();
-//        auto* testData = new std::vector<unsigned char>();
+        auto* testData = new std::vector<unsigned char>();
         testIndex->push_back(3);
-//        testData->push_back(0x43);
-//        settingsDatabase->storePrimaryMap(testIndex, testData);
-//        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("ABCDABCD"));
-//        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("DCBADCBA"));
-//        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("TestTest"));
-        CustomClasses::Component* retrieved = settingsDatabase->searchPrimaryAndSecondaryMap(testIndex);
+        testData->push_back(0x43);
+        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("I"), new CustomClasses::StringComponent("ABCDABCD"));
+        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("Index1"), new CustomClasses::StringComponent("DCBADCBA"));
+        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("Index2"), new CustomClasses::StringComponent("TestTest"));
+        CustomClasses::Component* retrieved = settingsDatabase->searchPrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("dfh"));
+        std::cout << "Finished search, ptr: " << int(retrieved) << "\n";
         std::cout << retrieved->toString() << "\n";
-
         //language functionality
 
         //parser
