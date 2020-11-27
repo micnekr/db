@@ -11,18 +11,22 @@
 #include <string>
 #include <stdint.h>
 #include <list>
+#include <vector>
 
 namespace CustomClasses{
 
     class MapFile{
         public:
             std::string path;
-            mio::mmap_sink* mappedFile;
+            mio::ummap_sink mappedFile;
             std::fstream* file;
             int fileSize;
 
+            std::error_code error;
+
             MapFile(std::string, int);
-            void set(uint32_t, uint64_t);
+            void set(uint64_t, std::vector<unsigned char>*);
+            std::vector<unsigned char>* get(uint64_t, int length);
     };
 }
 

@@ -11,15 +11,25 @@ int main()
 
         std::cout << "new database\n";
 
-        CustomClasses::DataBase *settingsDatabase = new CustomClasses::DataBase("testDb", "db.pm", "db.sm", 10, 10);
+        CustomClasses::DataBase *settingsDatabase = new CustomClasses::DataBase("testDb", "db.pm", "db.sm", 100, 100);
 
         dataBases->push_back(settingsDatabase);
         globalIdComponent->setChild(settingsDatabase->name, settingsDatabase);
 
         std::cout << "a new table\n";
 
+
         settingsDatabase->createTable("testTable");
-        settingsDatabase->store(4, new CustomClasses::StringComponent("ABCD"));
+        auto* testIndex = new std::vector<unsigned char>();
+//        auto* testData = new std::vector<unsigned char>();
+        testIndex->push_back(3);
+//        testData->push_back(0x43);
+//        settingsDatabase->storePrimaryMap(testIndex, testData);
+//        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("ABCDABCD"));
+//        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("DCBADCBA"));
+//        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("TestTest"));
+        CustomClasses::Component* retrieved = settingsDatabase->searchPrimaryAndSecondaryMap(testIndex);
+        std::cout << retrieved->toString() << "\n";
 
         //language functionality
 

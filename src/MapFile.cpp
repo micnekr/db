@@ -1,40 +1,52 @@
 #include "MapFile.h"
 
 using namespace CustomClasses;
-MapFile::MapFile(std::string _path, int allocatedSpace){
+
+MapFile::MapFile(std::string _path, int allocatedSpace) {
     path = _path;
     fileSize = allocatedSpace;
-    
+
     //init a file
-    bool fileExists = std::ifstream(path).is_open();
+    auto fileReader =  std::ifstream(path, std::ios::binary);
+    bool fileExists = fileReader.is_open();
 
     //if file doesn't exist, fill it with default size
-    if(!fileExists){
+    if (!fileExists) {
         //create new
         std::ofstream writeFile(path);
         //size
         std::string s(allocatedSpace, 0x00);
         writeFile << s << std::flush;
+    }else{
+        //set file size
+        fileReader.seekg(0, std::ios::end);
+        fileSize = fileReader.tellg();
     }
+
+    fileReader.close();
 
     file = new std::fstream(path, std::ios::in | std::ios::out | std::ios::binary);
 
     *file << std::noskipws;
-
-    mappedFile = new mio::mmap_sink(path);
+    mappedFile = mio::ummap_sink(path);
 }
 
-void MapFile::set(uint32_t index, uint64_t value){
-    int pointerSize = Config::getInstance().mapFilePointerSize;
-    uint64_t charStartIndex = index * pointerSize;
-    if(charStartIndex >= fileSize || charStartIndex < 0) throw std::runtime_error("Map file out of range, index " + std::to_string(index));
+void MapFile::set(uint64_t index, std::vector<unsigned char> *value) {
+    if (index + value->size() > fileSize || index < 0)
+        throw std::runtime_error("Map file out of range, index " + std::to_string(index) + " data size " + std::to_string(value->size()) + ", file size " + std::to_string(fileSize));
 
-    //loop through the values, most significant bits first
-    for(int i = pointerSize - 1; i >= 0; i--){
-        char currentChar = static_cast<char>(value);
-        (*mappedFile)[charStartIndex + i] = currentChar;
-
-        //shift the value back by 8 bits - a size of a char
-        value >>= 8;
+//    loop through the values, most significant bits first
+    for (int i = 0; i < value->size(); i++) {
+        std::cout << index + i << " " << (int) value->at(i) << "\n";
+        mappedFile[index + i] = value->at(i);
     }
+
+    mappedFile.sync(error);
+    if (error) std::cout << error.message() << "\n";
+}
+
+std::vector<unsigned char> *MapFile::get(uint64_t index, int length) {
+    auto values = new std::vector<unsigned char>();
+    for(int i = 0; i < length; i++) values->push_back(mappedFile[index + i]);
+    return values;
 }

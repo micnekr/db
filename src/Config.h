@@ -2,10 +2,10 @@
 #define CONFIG_H
 
 #include <iostream>
+#include "Enums.h"
 
 namespace CustomClasses
 {
-
     class Config
     {
     public:
@@ -23,13 +23,15 @@ namespace CustomClasses
         void operator=(Config const &) = delete;
 
     public:
-        const int mapFilePointerSize = 2;
+        const int mapFilePointerSize = 4;
 
         const int randomBytesInObjectId = 1;
         const int timeBytesInObjectId = 1;
         const int counterBytesInObjectId = 1;
 
         const int lengthBytesInDataRepresentation = 3;
+
+        const TombIndexSearchTypes defaultTOmbIndexSearchType = TombIndexSearchTypes::Smallest;
     };
 } // namespace CustomClasses
 
