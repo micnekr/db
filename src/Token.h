@@ -29,10 +29,10 @@ namespace CustomClasses{
         TokenTypes type;
         std::vector<Token*> children;
         Token(std::string, TokenTypes);
-        Token(std::string);
+        explicit Token(std::string);
         void addChild(Token*);
         void setChildren(std::vector<Token*>);
-        std::string print(int) const;
+        [[nodiscard]] std::string print(int) const;
 
         ~Token();
     };

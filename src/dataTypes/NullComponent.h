@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 
 namespace CustomClasses{
 
@@ -16,8 +16,6 @@ namespace CustomClasses{
 
         std::string toString() override;
         uint32_t generateId() override;
-
-        const static std::size_t hashValue;
 
         std::vector<unsigned char>* serialise() override;
         Component* deserealise(std::vector<unsigned char>*) override;

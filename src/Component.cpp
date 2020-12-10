@@ -3,11 +3,13 @@
 using namespace CustomClasses;
 
 void Component::addChild(CustomClasses::Component* component){
+    component->parent = this;
     children[std::to_string(nextChildArrayIndex)] = component;
     nextChildArrayIndex++;
 }
 
-void Component::setChild(std::string key, CustomClasses::Component* component){
+void Component::setChild(const std::string& key, CustomClasses::Component* component){
+    component->parent = this;
     children[key] = component;
     nextChildArrayIndex++;
 }
@@ -31,7 +33,6 @@ Component* Component::operator/(const Component& other){
 
 Component::~Component(){
     for(const auto& n : children) delete n.second;
-    std::cout << "destroyed a component\n";
 }
 
 uint32_t Component::getId(){

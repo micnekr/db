@@ -1,9 +1,11 @@
 #include "Table.h"
 
+#include <utility>
+
 using namespace CustomClasses;
 
 Table::Table(std::string _name, CustomClasses::DataBase* _parentDatabase){
-    name = _name;
+    name = std::move(_name);
     parentDatabase = _parentDatabase;
     className = "Table";
 

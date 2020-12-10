@@ -20,6 +20,7 @@ namespace CustomClasses {
 
     class DataBase : public IdComponent {
     public:
+        //TODO: move some functionality to the table class
         DataBase(std::string, std::string, std::string, int, int);
 
         DataBase() = delete;
@@ -31,15 +32,20 @@ namespace CustomClasses {
 
         std::list<TombIndex *> *tombstones;
 
-        void createTable(std::string);
+        void createTable(const std::string &);
 
-        void updateTombstones();
+        void updateTombstones() const;
 
         std::list<TombIndex *>::iterator findSuitableTombIndexIterator(uint64_t, TombIndexSearchTypes) const;
 
         void storePrimaryAndSecondaryMap(std::vector<unsigned char> *, Component *, Component *);
+        void store(Component *, Component *);
 
-        Component *searchPrimaryAndSecondaryMap(std::vector<unsigned char> *, Component*);
+        Component *searchPrimaryAndSecondaryMap(std::vector<unsigned char> *, Component *) const;
+
+        Component *search(Component *) const;
+
+        std::vector<unsigned char> *getPrimaryMapIndex(Component *) const;
 
         static std::vector<unsigned char> *serialiseSecondaryMapEntry(Component *, Component *);
 
@@ -48,7 +54,7 @@ namespace CustomClasses {
         static bool haveTypeBinaryRepresentationsBeenSet;
 
     private:
-        static void serialiseComponent(std::vector<unsigned char>*, Component * component);
+        static void serialiseComponent(std::vector<unsigned char> *, Component *component);
     };
 }
 

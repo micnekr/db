@@ -24,7 +24,7 @@ namespace CustomClasses {
         uint64_t charactersLength = 0;
         int lengthCharsLeft = 0;
         int lengthBytesInDataRepresentation = -1;
-        void next(char);
+        void next(unsigned char);
         void reset();
     };
 }

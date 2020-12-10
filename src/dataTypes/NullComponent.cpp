@@ -2,8 +2,6 @@
 
 using namespace CustomClasses;
 
-const std::size_t NullComponent::hashValue = std::hash<std::string>{}("null");
-
 NullComponent::NullComponent() = default;
 
 std::string NullComponent::toString() {

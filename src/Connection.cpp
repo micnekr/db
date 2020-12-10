@@ -18,7 +18,6 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
     case TokenTypes::Number:
         //if a number, return the number component
         return new  NumberComponent(std::stod(token->contents));
-        break;
     case TokenTypes::String:
         //if string, return the string component
         return new  StringComponent(token->contents);
@@ -28,7 +27,7 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
 
         //maths expressions
         if(token->contents == "VAL"){
-            NumberComponent* numberComponent = new  NumberComponent(0);
+            auto* numberComponent = new  NumberComponent(0);
 
             //pass upwards
             if (token->children.size() == 1)
@@ -98,6 +97,7 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
                     std::cout << "not found\n";
                     return new NullComponent();
                 }else{
+                    std::cout << "found " << leftComponent->children[rightIdName]->toString() << "\n";
                     return leftComponent->children[rightIdName];
                 }
             //calling functions
@@ -111,7 +111,7 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
                     std::cout << "non-empty params\n";
                     Component* rawParams = computeQuery(token->children.at(1));
 
-                    ArrayComponent* castedParams = dynamic_cast<ArrayComponent*>(rawParams);
+                    auto* castedParams = dynamic_cast<ArrayComponent*>(rawParams);
 
                     //if it is not an array, push it into an array
                     if(castedParams == nullptr){
@@ -129,7 +129,7 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
         //unknown
         }else if(token->contents == "ARRAY_PART"){
             //if the parent is an array
-            ArrayComponent* parentArray = dynamic_cast<ArrayComponent*>(parent);
+            auto* parentArray = dynamic_cast<ArrayComponent*>(parent);
             if(parentArray == nullptr) parentArray = new ArrayComponent();
 
             //add the left first
@@ -155,7 +155,6 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
     }
 
     throw std::runtime_error("Can not find action for the token");
-    return 0;
 }
 
 void Connection::execute(Token *token)

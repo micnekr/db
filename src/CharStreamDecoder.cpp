@@ -6,7 +6,7 @@
 
 using namespace CustomClasses;
 
-void CharStreamDecoder::next(char c) {
+void CharStreamDecoder::next(unsigned char c) {
     const char emptyChar = 0x00;
 
     //load length if not set
@@ -15,7 +15,7 @@ void CharStreamDecoder::next(char c) {
     if (state == ReadingLengthData) {
         //if still reading length bytes
         //shift a byte to the left
-        charactersLength <<= 8;
+        charactersLength <<= 8u;
         charactersLength += c;
         lengthCharsLeft--;
         if (lengthCharsLeft == 0) {
@@ -32,12 +32,12 @@ void CharStreamDecoder::next(char c) {
     else if(state == InvalidData){
         //because the first bit of length is always 1, the first char can not be 0x00
         //check if starting valid data,
-        if (c != 0x00) {
+        if (c != emptyChar) {
             state = ReadingLengthData;
             //7F = 0111 1111
             //remove the first bit
             lengthCharsLeft = lengthBytesInDataRepresentation - 1;
-            charactersLength = 0x7F & c;
+            charactersLength = 0x7Fu & c;
         }
     }
 }

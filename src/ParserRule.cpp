@@ -6,6 +6,7 @@ ParserRule::ParserRule(std::vector<TokenCheckTemplate*>* _inputTokens, Token* _o
     inputTokens = _inputTokens;
     outputToken = _outputToken;
     isUsingLookAhead = false;
+    lookAhead = nullptr;
 }
 
 ParserRule::ParserRule(std::vector<TokenCheckTemplate*>* _inputTokens, Token* _outputToken, std::vector<TokenCheckTemplate*>* _lookAhead){

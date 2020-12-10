@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <stdint.h>
+#include <cstdint>
 #include <cstring>
 
 namespace CustomClasses{
@@ -14,7 +14,7 @@ namespace CustomClasses{
         public:
         double value;
 
-        NumberComponent(double);
+        explicit NumberComponent(double);
 
         NumberComponent* setValue(double);
 

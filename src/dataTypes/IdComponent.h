@@ -19,7 +19,7 @@ namespace CustomClasses{
         static std::mt19937 mt_rand;
         static uint32_t componentCounter;
 
-        std::string className = "";
+        std::string className;
 
         std::string toString() override;
         uint32_t generateId() override;

@@ -12,7 +12,6 @@ namespace CustomClasses{
     class Lexer{
         public:
             static std::list<Token*> tokenize(std::string);
-            static TokenTypes lexerToTokenTypes(TokenTypes);
             static bool isWhitespaceChar(char);
             static bool isOperatorChar(char);
     };

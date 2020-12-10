@@ -13,9 +13,9 @@ namespace CustomClasses{
     };
     class TokenCheckTemplate{
         public:
-        TokenCheckTemplate(std::string, bool);
-        TokenCheckTemplate(std::string, bool, bool);
-        TokenCheckTemplate(TokenTypes);
+        TokenCheckTemplate(const std::string&, bool);
+        TokenCheckTemplate(const std::string&, bool, bool);
+        explicit TokenCheckTemplate(TokenTypes);
         bool testToken(Token*);
         bool isUserDefined; // can a user use this token in a command and will it be seen as one?
         private:
@@ -23,7 +23,7 @@ namespace CustomClasses{
         bool isCaseSensitive;
         std::string tokenValue;
         TokenTypes tokenType;
-        void initValueTokenChecker(std::string, bool);
+        void initValueTokenChecker(const std::string&, bool);
     };
 }
 #endif

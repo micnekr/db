@@ -2,9 +2,9 @@
 
 using namespace CustomClasses;
 
-std::string toLowerCase(std::string);
+std::string toLowerCase(const std::string&);
 
-void TokenCheckTemplate::initValueTokenChecker(std::string _tokenValue, bool _isCaseSensitive){
+void TokenCheckTemplate::initValueTokenChecker(const std::string& _tokenValue, bool _isCaseSensitive){
     isCaseSensitive = _isCaseSensitive;
 
     if(isCaseSensitive) tokenValue = _tokenValue;
@@ -13,14 +13,14 @@ void TokenCheckTemplate::initValueTokenChecker(std::string _tokenValue, bool _is
     tokenCheckTemplateType = TokenCheckTemplateTypes::Value;
 }
 
-TokenCheckTemplate::TokenCheckTemplate(std::string _tokenValue, bool _isCaseSensitive){
+TokenCheckTemplate::TokenCheckTemplate(const std::string& _tokenValue, bool _isCaseSensitive){
 
     initValueTokenChecker(_tokenValue, _isCaseSensitive);
 
     isUserDefined = true;
 }
 
-TokenCheckTemplate::TokenCheckTemplate(std::string _tokenValue, bool _isCaseSensitive, bool _isUserDefined){
+TokenCheckTemplate::TokenCheckTemplate(const std::string& _tokenValue, bool _isCaseSensitive, bool _isUserDefined){
     initValueTokenChecker(_tokenValue, _isCaseSensitive);
     isUserDefined = _isUserDefined;
 }
@@ -30,10 +30,10 @@ TokenCheckTemplate::TokenCheckTemplate(TokenTypes _tokenType){
     tokenCheckTemplateType = TokenCheckTemplateTypes::TokenType;
 }
 
-std::string toLowerCase(std::string in){
-    std::string out = "";
-    for(int i = 0; i < in.size(); i++)
-        out += std::tolower(in[i]);
+std::string toLowerCase(const std::string& in){
+    std::string out;
+    for(char i : in)
+        out += std::tolower(i);
     return out;
 }
 

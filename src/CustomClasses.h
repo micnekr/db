@@ -17,8 +17,6 @@
 #include "DataBase.h"
 #include "Table.h"
 
-#include "QueryResults.h"
-
 #include "Token.h"
 
 #include "Lexer.h"

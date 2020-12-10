@@ -18,9 +18,9 @@ void Parser::init(){
 
     ParserRule* rule;
 
-    std::vector<TokenCheckTemplate*>* inputs = new std::vector<TokenCheckTemplate*>();
+    std::vector<TokenCheckTemplate*>* inputs;
     Token* output;
-    std::vector<TokenCheckTemplate*>* lookAhead = new std::vector<TokenCheckTemplate*>();
+    std::vector<TokenCheckTemplate*>* lookAhead;
 
     //addressing
 
@@ -151,12 +151,11 @@ Token* Parser::parse(std::list<Token*> tokens){
     //clear the parse stack
     std::list<Token*> parseStack;
 
-    std::list<Token*>::iterator nextTokenIterator = tokens.begin();
+    auto nextTokenIterator = tokens.begin();
     //while not out of bounds
     while (true){
         // for(auto i : parseStack) std::cout << i->contents << "\n";
         //try to go through the stack and reduce
-        bool hasBeenReduced = false;
 
         //get the lookahead token
         Token* lookAheadToken;
@@ -166,14 +165,12 @@ Token* Parser::parse(std::list<Token*> tokens){
         }else{
             lookAheadToken = nullToken;
         }
-        hasBeenReduced = reduce(parseStack, lookAheadToken);
+        bool hasBeenReduced = reduce(parseStack, lookAheadToken);
 
         if(hasBeenReduced) {
             continue;
-        }
-
-        //shift
-        if(!hasBeenReduced){
+        }else{
+            //shift
             if(nextTokenIterator != tokens.end()){
                 parseStack.push_back(*nextTokenIterator);
                 nextTokenIterator++;
@@ -191,13 +188,11 @@ Token* Parser::parse(std::list<Token*> tokens){
 bool Parser::reduce(std::list<Token*>& parseStack, Token* nextToken){
 
     //try all rules and find the longest one that works
-    for(int grammarRuleIndex = 0; grammarRuleIndex < grammarRules.size(); grammarRuleIndex++){
-        ParserRule* grammarRule = grammarRules.at(grammarRuleIndex);
-
+    for(auto grammarRule : grammarRules){
         //loop through the possible starting points
         //index of the first token to check
         int index = 0;
-        for(std::list<Token*>::iterator i = parseStack.begin(); i != parseStack.end(); i++){
+        for(auto i = parseStack.begin(); i != parseStack.end(); i++){
             bool hasRuleWorked = true; 
 
             //if there is a lookahead, check it
@@ -242,14 +237,14 @@ bool Parser::reduce(std::list<Token*>& parseStack, Token* nextToken){
                     //if can be shifted, shift, or otherwise, do nothing
                     if(nextToken->type != TokenTypes::NullToken) return false;
                 }else{
-                    std::list<Token*>::iterator endOfDeletion = std::next(i, grammarRule->inputTokens->size());
+                    auto endOfDeletion = std::next(i, grammarRule->inputTokens->size());
 
                     std::vector<Token*> replacedTokens;
                     //fill the replaced tokens
-                    for(std::list<Token*>::iterator j = i; j != endOfDeletion; j++) replacedTokens.push_back(*j);
+                    for(auto j = i; j != endOfDeletion; j++) replacedTokens.push_back(*j);
 
                     //create a new token
-                    Token* newToken = new Token(grammarRule->outputToken->contents, grammarRule->outputToken->type);
+                    auto* newToken = new Token(grammarRule->outputToken->contents, grammarRule->outputToken->type);
                     newToken->setChildren(replacedTokens);
 
                     //insert first to get rid of referencing problems
@@ -264,5 +259,5 @@ bool Parser::reduce(std::list<Token*>& parseStack, Token* nextToken){
         }
     }
 
-    return false;;
+    return false;
 }

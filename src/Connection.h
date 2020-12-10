@@ -23,14 +23,11 @@ namespace CustomClasses{
             CustomClasses::IdComponent* globalIdComponent;
             Connection(std::vector<CustomClasses::DataBase*>*, CustomClasses::DataBase*, CustomClasses::IdComponent*);
 
-            std::unordered_map<std::string, Component*> connectionVars;
-
             CustomClasses::DataBase* selectedDataBase;
             std::vector<CustomClasses::DataBase*>* dataBases;
             void execute(Token*);
         private:
             Component* computeQuery(Token*, Component*);
-            Component* resolveTopLevelId(std::string);
     };
 }
 

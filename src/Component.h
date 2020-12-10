@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <stdint.h>
+#include <cstdint>
 
 namespace CustomClasses{
 
@@ -16,8 +16,10 @@ namespace CustomClasses{
         std::unordered_map<std::string, CustomClasses::Component*> children;
         int nextChildArrayIndex = 0;
 
+        Component* parent;
+
         void addChild(CustomClasses::Component*);
-        void setChild(std::string, CustomClasses::Component*);
+        void setChild(const std::string&, CustomClasses::Component*);
 
         virtual std::string toString() = 0;
 
@@ -37,7 +39,7 @@ namespace CustomClasses{
         virtual std::vector<unsigned char>* serialise();
         virtual Component* deserealise(std::vector<unsigned char>*);
 
-        ~Component();
+        virtual ~Component();
     };
 }
 

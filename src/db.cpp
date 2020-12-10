@@ -1,17 +1,23 @@
+//#define _WIN32_WINNT 0x0601
+//#ifndef WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
+//#endif
+
+//#include "dep/restinio/restinio/all.hpp"
 #include "CustomClasses.h"
 #include <list>
 #include <iostream>
-int main()
-{
+
+int main() {
     try {
         //global IdComponent
-        CustomClasses::IdComponent *globalIdComponent = new CustomClasses::IdComponent();
+        auto *globalIdComponent = new CustomClasses::IdComponent();
 
-        std::vector<CustomClasses::DataBase *> *dataBases = new std::vector<CustomClasses::DataBase *>();
+        auto *dataBases = new std::vector<CustomClasses::DataBase *>();
 
         std::cout << "new database\n";
 
-        CustomClasses::DataBase *settingsDatabase = new CustomClasses::DataBase("testDb", "db.pm", "db.sm", 100, 100);
+        auto *settingsDatabase = new CustomClasses::DataBase("testDb", "db.pm", "db.sm", 10000, 10000);
 
         dataBases->push_back(settingsDatabase);
         globalIdComponent->setChild(settingsDatabase->name, settingsDatabase);
@@ -20,16 +26,17 @@ int main()
 
 
         settingsDatabase->createTable("testTable");
-        auto* testIndex = new std::vector<unsigned char>();
-        auto* testData = new std::vector<unsigned char>();
-        testIndex->push_back(3);
-        testData->push_back(0x43);
-        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("I"), new CustomClasses::StringComponent("ABCDABCD"));
-        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("Index1"), new CustomClasses::StringComponent("DCBADCBA"));
-        settingsDatabase->storePrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("Index2"), new CustomClasses::StringComponent("TestTest"));
-        CustomClasses::Component* retrieved = settingsDatabase->searchPrimaryAndSecondaryMap(testIndex, new CustomClasses::StringComponent("dfh"));
-        std::cout << "Finished search, ptr: " << int(retrieved) << "\n";
-        std::cout << retrieved->toString() << "\n";
+//        std::cout << "Store" << "\n";
+//        settingsDatabase->store(new CustomClasses::StringComponent("I"),
+//                                new CustomClasses::StringComponent("ABCDABCD"));
+//        settingsDatabase->store(new CustomClasses::StringComponent("Index1"),
+//                                new CustomClasses::StringComponent("DCBADCBA"));
+//        settingsDatabase->store(new CustomClasses::StringComponent("Index2"),
+//                                new CustomClasses::StringComponent("TestTest"));
+//        std::cout << "Search" << "\n";
+//        CustomClasses::Component *retrieved = settingsDatabase->search(new CustomClasses::StringComponent("Index1"));
+//        std::cout << "Finished search, ptr: " << int(retrieved) << "\n";
+//        std::cout << retrieved->toString() << "\n";
         //language functionality
 
         //parser
@@ -38,10 +45,12 @@ int main()
         std::string languageInput;
         std::getline(std::cin, languageInput);
 
+        std::cout << "Tokenising" << "\n";
         std::list<CustomClasses::Token *> tokens = CustomClasses::Lexer::tokenize(languageInput);
 
-        for (auto const &i : tokens)
-        {
+        std::cout << "Tokenised" << "\n";
+
+        for (auto const &i : tokens) {
             std::cout << "'" << i->contents << "'" << i->type << "\n";
         }
 
@@ -63,11 +72,11 @@ int main()
         std::string waitString;
         std::cin >> waitString;
         return 0;
-    }catch(std::string ex){
-        std::cerr << "\n\n" << ex << "\n";
+    } catch (std::string &ex) {
+        std::cout << "\n\n" << ex << "\n";
         int waitForInput;
         std::cin >> waitForInput;
-    }catch(const char* ex){
+    } catch (const char *ex) {
         std::cerr << "\n\n" << ex << "\n";
         int waitForInput;
         std::cin >> waitForInput;

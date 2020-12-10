@@ -1,16 +1,18 @@
 #include "Lexer.h"
 
+#include <utility>
+
 using namespace CustomClasses;
 
 char whitespaceChars [] = {' ', '\n', '\t'};
 
 bool safelyCheckChars(int, std::string, std::string);
-TokenTypes getTokenType(char, int, std::string);
+TokenTypes getTokenType(char, int, std::string&);
 
 std::list<Token*> Lexer::tokenize(std::string in){
     std::list<Token*> out;
     TokenTypes currentState = NoToken;
-    std::string currentToken = "";
+    std::string currentToken;
 
     char stringChar = '_';
 
@@ -84,14 +86,14 @@ std::list<Token*> Lexer::tokenize(std::string in){
         currentToken += currentChar;
     }
 
-    if(currentToken != "") out.push_back(new Token(currentToken, currentState));
+    if(!currentToken.empty()) out.push_back(new Token(currentToken, currentState));
 
     return out;
 }
 
 bool Lexer::isWhitespaceChar(char character){
-    for(int i = 0; i < (sizeof(whitespaceChars)/sizeof(*whitespaceChars)); i++){
-        if(whitespaceChars[i] == character) return true;
+    for(char whitespaceChar : whitespaceChars){
+        if(whitespaceChar == character) return true;
     }
     return false;
 }
@@ -100,7 +102,7 @@ bool Lexer::isOperatorChar(char character){
     return (character == '+') || (character == '-') ||  (character == '*') || (character == '/') || (character == '=') || (character == '<') || (character == '>')  || (character == '!') || (character == '.' || (character == ','));
 }
 
-TokenTypes getTokenType(char currentChar, int i, std::string in){
+TokenTypes getTokenType(char currentChar, int i, std::string& in){
     if(isalpha(currentChar)){
         return Identifer;
     }else if (isdigit(currentChar)){

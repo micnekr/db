@@ -26,7 +26,6 @@ std::string ArrayComponent::toString(){
     //         key = std::stoi(iterator.first);
     //         lastInt++;
     //     }catch(const std::exception& ex) {
-    //         std::cout << "unexpected exception when converting a string to int" << "\n";
     //         return IdComponent::toString();
     //     }
     //     out += iterator.second->toString();

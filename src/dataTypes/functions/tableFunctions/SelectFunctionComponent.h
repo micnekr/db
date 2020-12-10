@@ -4,6 +4,7 @@
 #include "../../FunctionComponent.h"
 #include "../../StringComponent.h"
 #include "../../ArrayComponent.h"
+#include "../../../DataBase.h"
 #include <iostream>
 #include <string>
 

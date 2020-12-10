@@ -23,37 +23,37 @@ std::string NumberComponent::toString(){
 
 Component* NumberComponent::operator+(const Component& other){
     //if not a number, throw an error
-    const NumberComponent* numberComponentPtr = dynamic_cast<const NumberComponent*>(&other);
+    const auto* numberComponentPtr = dynamic_cast<const NumberComponent*>(&other);
     if(numberComponentPtr == nullptr) throw std::runtime_error("This operation is not supported");
 
-    NumberComponent* out = new NumberComponent(this->value + numberComponentPtr->value);
+    auto* out = new NumberComponent(this->value + numberComponentPtr->value);
 
     return out;
 }
 Component* NumberComponent::operator-(const Component& other){
     //if not a number, throw an error
-    const NumberComponent* numberComponentPtr = dynamic_cast<const NumberComponent*>(&other);
+    const auto* numberComponentPtr = dynamic_cast<const NumberComponent*>(&other);
     if(numberComponentPtr == nullptr) throw std::runtime_error("This operation is not supported");
 
-    NumberComponent* out = new NumberComponent(this->value - numberComponentPtr->value);
+    auto* out = new NumberComponent(this->value - numberComponentPtr->value);
 
     return out;
 }
 Component* NumberComponent::operator*(const Component& other){
     //if not a number, throw an error
-    const NumberComponent* numberComponentPtr = dynamic_cast<const NumberComponent*>(&other);
+    const auto* numberComponentPtr = dynamic_cast<const NumberComponent*>(&other);
     if(numberComponentPtr == nullptr) throw std::runtime_error("This operation is not supported");
 
-    NumberComponent* out = new NumberComponent(this->value * numberComponentPtr->value);
+    auto* out = new NumberComponent(this->value * numberComponentPtr->value);
 
     return out;
 }
 Component* NumberComponent::operator/(const Component& other){
     //if not a number, throw an error
-    const NumberComponent* numberComponentPtr = dynamic_cast<const NumberComponent*>(&other);
+    const auto* numberComponentPtr = dynamic_cast<const NumberComponent*>(&other);
     if(numberComponentPtr == nullptr) throw std::runtime_error("This operation is not supported");
 
-    NumberComponent* out = new NumberComponent(this->value / numberComponentPtr->value);
+    auto* out = new NumberComponent(this->value / numberComponentPtr->value);
 
     return out;
 }
@@ -62,7 +62,7 @@ uint32_t NumberComponent::generateId(){
     uint64_t valueAsInt;
     std::memcpy(&valueAsInt, &value, sizeof(value));
 
-    uint32_t result = ((valueAsInt << 32) ^ (valueAsInt >> 32));
+    uint32_t result = ((valueAsInt << 32u) ^ (valueAsInt >> 32u));
 
     return result;
 }
@@ -71,14 +71,12 @@ std::vector<unsigned char>* NumberComponent::serialise() {
     uint64_t uintRepresentation;
     memcpy(&uintRepresentation, &value, sizeof(value));
 
-    std::cout << std::hex << uintRepresentation << "\n";
-
-    std::vector<unsigned char>* bytes = new std::vector<unsigned char>();
+    auto* bytes = new std::vector<unsigned char>();
 
 
     for(int i = 0; i < 8; i++){
-        bytes->push_back(uintRepresentation & 0xFF);
-        uintRepresentation >>= 8;
+        bytes->push_back(uintRepresentation & 0xFFu);
+        uintRepresentation >>= 8u;
     }
 
     return bytes;
@@ -87,15 +85,10 @@ std::vector<unsigned char>* NumberComponent::serialise() {
 Component *NumberComponent::deserealise(std::vector<unsigned char> * bytes) {
     uint64_t uintRepresentation = 0;
 
-    std::cout << bytes->size() << "\n";
-
     for(int i = 7; i >= 0; i--){
-        uintRepresentation <<= 8;
-        std::cout << i << " " << int(bytes->at(i)) << "\n";
+        uintRepresentation <<= 8u;
         uintRepresentation += bytes->at(i);
     }
-
-    std::cout << std::hex << uintRepresentation << " deserialise num" << "\n";
 
     memcpy(&value, &uintRepresentation, sizeof(value));
 

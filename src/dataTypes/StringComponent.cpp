@@ -1,18 +1,20 @@
 #include "StringComponent.h"
 
+#include <utility>
+
 using namespace CustomClasses;
 
 StringComponent::StringComponent(std::string _value) {
-    value = _value;
+    value = std::move(_value);
 }
 
 StringComponent *StringComponent::setValue(std::string _value) {
-    value = _value;
+    value = std::move(_value);
     return this;
 }
 
 std::string StringComponent::toString() {
-    return value;
+    return '"' + value + '"';
 }
 
 Component *StringComponent::operator+(const Component &other) {
@@ -26,16 +28,16 @@ Component *StringComponent::operator+(const Component &other) {
 }
 
 uint32_t StringComponent::generateId() {
-    if (value.size() == 0) return 0;
+    if (value.empty()) return 0;
     int hash = 0;
-    for (int i = 0; i < value.size(); i++) {
-        hash = hash * 31 + value.at(i);
+    for (char i : value) {
+        hash = hash * 31 + i;
     }
     return hash;
 }
 
 std::vector<unsigned char> *StringComponent::serialise() {
-    std::vector<unsigned char> *bytes = new std::vector<unsigned char>(value.begin(), value.end());
+    auto *bytes = new std::vector<unsigned char>(value.begin(), value.end());
     return bytes;
 }
 

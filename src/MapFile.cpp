@@ -1,9 +1,11 @@
 #include "MapFile.h"
 
+#include <utility>
+
 using namespace CustomClasses;
 
 MapFile::MapFile(std::string _path, int allocatedSpace) {
-    path = _path;
+    path = std::move(_path);
     fileSize = allocatedSpace;
 
     //init a file
@@ -37,12 +39,11 @@ void MapFile::set(uint64_t index, std::vector<unsigned char> *value) {
 
 //    loop through the values, most significant bits first
     for (int i = 0; i < value->size(); i++) {
-        std::cout << index + i << " " << (int) value->at(i) << "\n";
         mappedFile[index + i] = value->at(i);
     }
 
     mappedFile.sync(error);
-    if (error) std::cout << error.message() << "\n";
+    if (error) std::cerr << error.message() << "\n";
 }
 
 std::vector<unsigned char> *MapFile::get(uint64_t index, int length) {
