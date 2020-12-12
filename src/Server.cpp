@@ -54,6 +54,9 @@ void handle_request(
                 catch (http_exception const &e) {
                     std::cout << "Error\n";
                     wcout << e.what() << endl;
+                } catch(std::exception& ex){
+                    std::cout << "Error - exception\n";
+                    wcout << ex.what() << endl;
                 } catch(...){std::cout << "Error\n";}
             })
             .wait();
@@ -73,6 +76,12 @@ void Server::handlePost(http_request request) {
     handle_request(
             request,
             [this, &request](json::value const &jvalue, json::value &answer, bool &hasReplied) {
+                if(jvalue.is_null() || !jvalue.is_array() || jvalue.as_array().size() == 0){
+                    std::cout << "icorrect form - not an array\n";
+                    hasReplied = true;
+                    request.reply(status_codes::BadRequest);
+                    return;
+                }
                 std::cout << "is array " << jvalue.is_array() << "\n";
 
                 auto params = jvalue.as_array();
