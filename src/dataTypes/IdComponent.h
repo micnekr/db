@@ -22,7 +22,9 @@ namespace CustomClasses{
         std::string className;
 
         std::string toString() override;
+        std::string toString(bool toJson) override;
         uint32_t generateId() override;
+
     };
 }
 

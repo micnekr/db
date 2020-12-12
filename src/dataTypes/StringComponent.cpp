@@ -64,3 +64,7 @@ StringComponent::StringComponent(Component * toConvert) {
         value = toConvert->toString();
     }
 }
+
+std::string StringComponent::toString(bool toJson) {
+    return toString();
+}

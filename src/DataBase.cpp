@@ -31,12 +31,15 @@ DataBase::DataBase(std::string _name, std::string primaryMapPath, std::string se
         secondaryMap = new MapFile(std::move(secondaryMapPath), secondaryAllocatedSpace);
         charStreamDecoder = new CharStreamDecoder();
 
+        std::cout << "created the maps\n";
+
         className = "Database";
         name = std::move(_name);
 
         tombstones = new std::list<TombIndex *>();
 
         updateTombstones();
+        std::cout << "updated the tombstones\n";
     } catch (const std::system_error &e) {
         throw std::runtime_error("Files could not be opened or created");
     }

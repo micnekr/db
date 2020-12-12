@@ -22,6 +22,14 @@ Server::Server(std::vector<DataBase *> *_dataBases, DataBase *_selectedDataBase,
     std::string languageInput;
 }
 
+web::json::value stringToJson(std::string const &input) {
+    utility::stringstream_t s;
+
+    s << utility::conversions::to_utf16string(input);
+    web::json::value ret = json::value::parse(s);
+    return ret;
+}
+
 void handle_request(
         http_request request,
         function<void(json::value const &, json::value &, bool &)> action) {
@@ -46,7 +54,7 @@ void handle_request(
                 catch (http_exception const &e) {
                     std::cout << "Error\n";
                     wcout << e.what() << endl;
-                }
+                } catch(...){std::cout << "Error\n";}
             })
             .wait();
 
@@ -102,7 +110,9 @@ void Server::handlePost(http_request request) {
 
                 delete token;
 
-                answer[L"results"] = json::value::string(utility::conversions::to_utf16string(result->toString()));
+                std::cout << "result: '" << result->toString(true) << "'\n";
+
+                answer[L"results"] = stringToJson(result->toString(true));
 
 //                for (auto const & e : jvalue.as_array())
 //                {

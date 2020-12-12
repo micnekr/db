@@ -22,6 +22,7 @@ namespace CustomClasses{
         void setChild(const std::string&, CustomClasses::Component*);
 
         virtual std::string toString() = 0;
+        virtual std::string toString(bool) = 0;
 
         virtual Component* call(ArrayComponent* args);
 

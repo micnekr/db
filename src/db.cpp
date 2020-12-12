@@ -65,5 +65,9 @@ int main() {
         std::cerr << "\n\n" << ex << "\n";
         int waitForInput;
         std::cin >> waitForInput;
+    } catch(const std::runtime_error &err){
+        std::cerr << "\n\n" << err.what() << "\n";
+        int waitForInput;
+        std::cin >> waitForInput;
     }
 }

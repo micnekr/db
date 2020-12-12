@@ -19,6 +19,7 @@ namespace CustomClasses{
         void operator/(const FunctionComponent&);
 
         std::string toString() override = 0;
+        std::string toString(bool toJson) override;
 
         Component* call(ArrayComponent* args) override = 0;
     };

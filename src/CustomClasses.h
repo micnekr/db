@@ -14,6 +14,7 @@
 #include "dataTypes/NullComponent.h"
 #include "dataTypes/ArrayComponent.h"
 #include "dataTypes/functions/tableFunctions/SelectFunctionComponent.h"
+#include "dataTypes/functions/tableFunctions/InsertFunctionComponent.h"
 #include "DataBase.h"
 #include "Table.h"
 

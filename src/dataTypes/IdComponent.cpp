@@ -6,29 +6,32 @@ uint32_t IdComponent::componentCounter = 0;
 std::mt19937 IdComponent::mt_rand = std::mt19937(std::time(nullptr));
 
 std::string IdComponent::toString(){
+    return IdComponent::toString(false);
+}
+
+std::string IdComponent::toString(bool toJson=false){
     // if it is an object
     if(children.find("__value") == children.end()){
         std::string out;
         if(!className.empty()) out += "<" + className + "> ";
         //if empty, return empty object
-        if(children.empty()) return out + "{}";
         out += "{";
-        out += '\n';
+        //TODO: bring back the formatting from the older versions
         for(auto& iterator: children){
             std::string key = iterator.first;
-            std::string value = iterator.second->toString();
+            std::string value = iterator.second->toString(toJson);
 
             //indent
             std::string formatedValue;
             for(char currentChar : value){
                 formatedValue += currentChar;
-
-                if(currentChar == '\n') formatedValue += '\t';
             }
 
-            out += '\t' + key;
+            if (toJson) out += "\"";
+            out += key;
+            if (toJson) out += "\"";
             out += ":";
-            out += formatedValue + '\n';
+            out += formatedValue;
         }
         return out += "}";
     }else return children["__value"]->toString();

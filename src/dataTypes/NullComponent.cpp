@@ -5,7 +5,7 @@ using namespace CustomClasses;
 NullComponent::NullComponent() = default;
 
 std::string NullComponent::toString() {
-    return "Null";
+    return "null";
 }
 
 uint32_t NullComponent::generateId() {
@@ -18,4 +18,8 @@ std::vector<unsigned char> *NullComponent::serialise() {
 
 Component *NullComponent::deserealise(std::vector<unsigned char> *bytes) {
     return this;
+}
+
+std::string NullComponent::toString(bool toJson) {
+    return toString();
 }

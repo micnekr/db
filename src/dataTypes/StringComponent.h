@@ -21,6 +21,7 @@ namespace CustomClasses{
         Component* operator+(const Component&) override;
 
         std::string toString() override;
+        std::string toString(bool toJson) override;
 
         uint32_t generateId() override;
 

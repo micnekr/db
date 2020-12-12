@@ -10,7 +10,8 @@
 namespace CustomClasses{
     class ArrayComponent: public IdComponent{
         public:
-        std::string toString();
+        std::string toString() override;
+        std::string toString(bool toJson) override;
     };
 }
 

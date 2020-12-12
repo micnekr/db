@@ -18,16 +18,22 @@ Component* SelectFunctionComponent::call(ArrayComponent* args){
 
     Component* result = database->search(key);
 
+    auto* out = new ArrayComponent();
+
     //if not found
     if(result == nullptr) {
         std::cout << "not found\n";
         //return empty
-        return new ArrayComponent();
+        return out;
     }
+
+    if(dynamic_cast<NumberComponent*>(result) != nullptr) std::cout << "number\n";
 
     std::cout << "result: " << result->toString() << "\n";
 
-    return new StringComponent(result);
+    out->addChild(result);
+
+    return out;
 }
 
 std::string SelectFunctionComponent::toString(){

@@ -94,3 +94,7 @@ Component *NumberComponent::deserealise(std::vector<unsigned char> * bytes) {
 
     return this;
 }
+
+std::string NumberComponent::toString(bool toJson) {
+    return toString();
+}

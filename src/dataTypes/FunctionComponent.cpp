@@ -18,3 +18,7 @@ void FunctionComponent::operator*(const FunctionComponent& other){
 void FunctionComponent::operator/(const FunctionComponent& other){
     throw std::runtime_error("This operation is not supported");
 }
+
+std::string FunctionComponent::toString(bool toJson) {
+    return toString();
+}

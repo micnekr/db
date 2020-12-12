@@ -1,4 +1,5 @@
 #include "Table.h"
+#include "dataTypes/functions/tableFunctions/InsertFunctionComponent.h"
 
 #include <utility>
 
@@ -11,4 +12,5 @@ Table::Table(std::string _name, CustomClasses::DataBase* _parentDatabase){
 
     //add the table functions
     setChild("select", new SelectFunctionComponent());
+    setChild("insert", new InsertFunctionComponent());
 }

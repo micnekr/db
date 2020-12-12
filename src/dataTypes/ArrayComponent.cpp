@@ -3,7 +3,12 @@
 using namespace CustomClasses;
 
 std::string ArrayComponent::toString(){
-    return IdComponent::toString();
+    return toString(false);
+}
+
+std::string ArrayComponent::toString(bool toJson) {
+    return IdComponent::toString(toJson);
+
     // //check if it is an object with keys as ints
     // bool allPositiveInts = true;
     // for(auto &iterator : children){
