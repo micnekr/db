@@ -9,7 +9,7 @@ std::string IdComponent::toString(){
     return IdComponent::toString(false);
 }
 
-std::string IdComponent::toString(bool toJson=false){
+std::string IdComponent::toString(bool toJson){
     // if it is an object
     if(children.find("__value") == children.end()){
         std::string out;
