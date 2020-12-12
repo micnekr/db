@@ -12,10 +12,10 @@ file(GLOB db_SRC
         "src/dataTypes/functions/tableFunctions/*.cpp"
         )
 
-#find_package(cpprestsdk CONFIG REQUIRED)
+find_package(cpprestsdk CONFIG REQUIRED)
 
 include_directories(src/dep/cpprestsdk/Release/include)
 
 add_executable(main src/db.cpp ${db_SRC} src/CharStreamDecoder.cpp src/CharStreamDecoder.h src/Enums.h src/Server.cpp src/Server.h src/dataTypes/functions/tableFunctions/InsertFunctionComponent.cpp src/dataTypes/functions/tableFunctions/InsertFunctionComponent.h)
-#target_link_libraries(main PRIVATE
-#        cpprestsdk::cpprest cpprestsdk::cpprestsdk_zlib_internal cpprestsdk::cpprestsdk_brotli_internal)
+target_link_libraries(main PRIVATE
+        cpprestsdk::cpprest cpprestsdk::cpprestsdk_zlib_internal cpprestsdk::cpprestsdk_brotli_internal)
