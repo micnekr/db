@@ -10,7 +10,10 @@ std::string IdComponent::toString(){
     if(children.find("__value") == children.end()){
         std::string out;
         if(!className.empty()) out += "<" + className + "> ";
-        out += "{\n";
+        //if empty, return empty object
+        if(children.empty()) return out + "{}";
+        out += "{";
+        out += '\n';
         for(auto& iterator: children){
             std::string key = iterator.first;
             std::string value = iterator.second->toString();
@@ -20,12 +23,12 @@ std::string IdComponent::toString(){
             for(char currentChar : value){
                 formatedValue += currentChar;
 
-                if(currentChar == '\n') formatedValue += "\t";
+                if(currentChar == '\n') formatedValue += '\t';
             }
 
-            out += "\t" + key;
+            out += '\t' + key;
             out += ":";
-            out += formatedValue + "\n";
+            out += formatedValue + '\n';
         }
         return out += "}";
     }else return children["__value"]->toString();

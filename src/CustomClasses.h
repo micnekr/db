@@ -27,4 +27,6 @@
 
 #include "Connection.h"
 
+#include "Server.h"
+
 #endif

@@ -66,7 +66,7 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
 
             //if a single token, make the idcomponent based on the child's name
             if(token->children.size() == 1) {
-                IdComponent* out;
+                IdComponent* out = nullptr;
                 if(parent == nullptr){
                     std::string key = token->children.at(0)->contents;
                     //try to find it as a child in the global id component
@@ -157,8 +157,9 @@ Component* Connection::computeQuery(Token *token, Component *parent = nullptr)
     throw std::runtime_error("Can not find action for the token");
 }
 
-void Connection::execute(Token *token)
+Component* Connection::execute(Token *token)
 {
-    std::string result = computeQuery(token)->toString();
-    std::cout << "result:\n" << result << "\n";
+    Component* result = computeQuery(token);
+    std::cout << "result:\n" << result->toString() << "\n";
+    return result;
 }

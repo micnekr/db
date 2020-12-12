@@ -21,12 +21,13 @@ Component* SelectFunctionComponent::call(ArrayComponent* args){
     //if not found
     if(result == nullptr) {
         std::cout << "not found\n";
-        return nullptr;
+        //return empty
+        return new ArrayComponent();
     }
 
     std::cout << "result: " << result->toString() << "\n";
 
-    return new StringComponent(result->toString());
+    return new StringComponent(result);
 }
 
 std::string SelectFunctionComponent::toString(){

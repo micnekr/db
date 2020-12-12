@@ -14,6 +14,7 @@ namespace CustomClasses{
         std::string value;
 
         explicit StringComponent(std::string);
+        explicit StringComponent(Component*);
 
         StringComponent* setValue(std::string);
 

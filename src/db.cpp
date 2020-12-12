@@ -3,7 +3,11 @@
 //#define WIN32_LEAN_AND_MEAN
 //#endif
 
-//#include "dep/restinio/restinio/all.hpp"
+//#include "restinio/all.hpp"
+
+#include <cpprest/http_client.h>
+#include <cpprest/filestream.h>
+
 #include "CustomClasses.h"
 #include <list>
 #include <iostream>
@@ -24,8 +28,8 @@ int main() {
 
         std::cout << "a new table\n";
 
-
         settingsDatabase->createTable("testTable");
+
 //        std::cout << "Store" << "\n";
 //        settingsDatabase->store(new CustomClasses::StringComponent("I"),
 //                                new CustomClasses::StringComponent("ABCDABCD"));
@@ -39,38 +43,19 @@ int main() {
 //        std::cout << retrieved->toString() << "\n";
         //language functionality
 
-        //parser
-        CustomClasses::Parser::init();
-
-        std::string languageInput;
-        std::getline(std::cin, languageInput);
-
-        std::cout << "Tokenising" << "\n";
-        std::list<CustomClasses::Token *> tokens = CustomClasses::Lexer::tokenize(languageInput);
-
-        std::cout << "Tokenised" << "\n";
-
-        for (auto const &i : tokens) {
-            std::cout << "'" << i->contents << "'" << i->type << "\n";
-        }
-
-        CustomClasses::Token *token = CustomClasses::Parser::parse(tokens);
-
-        std::cout << *token << "\n";
-
-        std::cout << "new connection\n";
-
-        CustomClasses::Connection connection(dataBases, settingsDatabase, globalIdComponent);
-
-        std::cout << "executing...\n";
-
-        connection.execute(token);
-
-        delete token;
-        delete settingsDatabase;
+        //start the server
+        auto server = new CustomClasses::Server(dataBases, settingsDatabase, globalIdComponent);
 
         std::string waitString;
         std::cin >> waitString;
+
+        //delete
+        delete settingsDatabase;
+        delete server;
+
+        std::cout << "Memory freed\n";
+
+
         return 0;
     } catch (std::string &ex) {
         std::cout << "\n\n" << ex << "\n";

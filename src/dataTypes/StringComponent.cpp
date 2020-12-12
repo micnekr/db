@@ -44,7 +44,8 @@ std::vector<unsigned char> *StringComponent::serialise() {
 Component *StringComponent::deserealise(std::vector<unsigned char> *bytes) {
 
     //convert bytes to a byte array
-    char unsignedBytes[bytes->size()];
+    const auto byteVectorSize = bytes->size();
+    char* unsignedBytes = new char[byteVectorSize];
     std::copy(bytes->begin(), bytes->end(), unsignedBytes);
 
     //make them signed
@@ -53,4 +54,13 @@ Component *StringComponent::deserealise(std::vector<unsigned char> *bytes) {
     //create a string, second argument is length to ensure null chars aren't lost
     value = std::string(signedBytes, bytes->size());
     return this;
+}
+
+StringComponent::StringComponent(Component * toConvert) {
+    auto* stringComponentPointer = dynamic_cast<StringComponent*>(toConvert);
+    if(stringComponentPointer != nullptr){
+        value = stringComponentPointer->value;
+    }else{
+        value = toConvert->toString();
+    }
 }

@@ -25,7 +25,7 @@ namespace CustomClasses{
 
             CustomClasses::DataBase* selectedDataBase;
             std::vector<CustomClasses::DataBase*>* dataBases;
-            void execute(Token*);
+            Component * execute(Token*);
         private:
             Component* computeQuery(Token*, Component*);
     };
