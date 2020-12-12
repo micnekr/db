@@ -7,7 +7,7 @@ Currently, insert and select functions on tables work, as well as basic math, e.
 Memory leaks will be fixed in the future
 
 ## Usage
-Run `cmake-build-debug-visual-studio/db.exe`, which creates a local server on port 9000 which listens to post requests.  
+Run `cmake-build-debug-visual-studio/main.exe` and place it in the same folder as the `.dll` files, which creates a local server on port 9000 which listens to post requests.  
 Use some software, such as Postman, to make a post request to the server with the body containing an array with the query,
  such as `["testDb.testTable.insert(\"Index1\", 3)"]` (note the escaped quotes). 
  This is done to provide flexibility in the future.
