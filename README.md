@@ -1,10 +1,8 @@
 # db
 
-A simple database system using the HashMap concept that is nowhere near being ready for use
+A simple proof-of-concept database that I worked on to practice using C++. Not for use in serious projects.
 
 Currently, insert and select functions on tables work, as well as basic math, e.g. `2*(2+2)` returns `8`
-
-Memory leaks will be fixed in the future
 
 ## Usage
 Run `cmake-build-debug-visual-studio/main.exe` and place it in the same folder as the `.dll` files, which creates a local server on port 9000 which listens to post requests.  
